@@ -2,6 +2,7 @@
 @import "fonts";
 @import "mq";
 @import "palette";
+@import "scrolly";
 @import "dcr_enhancer"; // default left column enhancer, works with inline, showcase and immersive weighting
 // @import "full_immersive_enhancer"; // full-width enhancer, to be used with immersive weighting. Removes left colum, sets 100vw atom width at any breakpoint
 
@@ -46,4 +47,376 @@ root {
     figure.element.element-atom, figure.interactive.interactive-atom.interactive--loading {
         padding: 0 !important;
     }
+}
+
+
+.colour-key-wraper{
+    width: 100%;
+    height:auto;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    .colour-key-element{
+
+        display: flex;
+        flex-direction: row;
+        p{margin:0;}
+        margin-right: 8px;
+        @include fs-textSans(1);
+        align-items:center;
+
+        .key-shaded-area{width: 12px; height: 12px; background:#c70000; opacity: .3; margin-right: 3px;}
+
+        .key-arrow{
+          width: 0;
+          height: 0;
+          border-width: 6px;
+          border-style: solid;
+          border-bottom-color: transparent;
+          border-left-color: transparent;
+          border-top-color: #c70000;
+          border-right-color: #c70000;
+          transform: rotate(45deg);
+          margin-right: 10px;
+          &:before{
+            content: "";
+            box-sizing: border-box;
+            right: 0;
+            top: -3px;
+            position: absolute;
+            height: 4px;
+            box-shadow: inset 0 0 0 32px;
+            transform: rotate(-45deg);
+            width: 10px;
+            transform-origin: right top;
+            color: #c70000;
+
+        }
+    }
+
+
+
+    .key-dot{
+        width: 12px; height: 12px;border-radius: 50px;background:black; margin-right: 3px;
+        &.border{background:#ed6300;}
+        &.airstrike{background:#1896d7;}
+        &.russian-attack{background:#c70000; }
+        &.russian-ground{background:#f5be2c;}
+        &.russian-capture{background:#ed6300; }
+        &.ukranian-ground{background:#f5be2c; }
+
+    }
+}
+}
+
+
+.overlays {
+
+    .map-overlay{
+       mix-blend-mode:multiply;
+
+       opacity: 0;
+
+       &.render{
+        opacity: .3;
+    }
+
+    &.img-20220222-overlay.render{
+        opacity: 1;
+    }
+}
+
+.Ukraine > .map-overlay:first-of-type{
+
+    opacity: 1;
+}
+
+}
+
+.donbas{
+    fill:#c70000;
+    fill-opacity: .3;
+}
+
+.mask{
+    fill:#333;
+    mix-blend-mode: overlay;
+    fill-opacity: .15;
+}
+
+.water{
+  fill:#CDE2EC;
+  stroke:#82B6D0;
+  stroke-width:1;
+}
+
+.boundary{
+  fill:none;
+  stroke:#929297;
+  stroke:#ff0000;
+
+  stroke-opacity:.1;
+
+  @include mq($from: 0px,  $until: 619px) {
+    stroke-width:3px;
+}
+@include mq(desktop) {
+    stroke-width:1px;
+}
+}
+
+.disputed{
+    fill:none;
+    stroke:#333;
+    stroke-width:2px;
+    //stroke-linecap:round;
+    stroke-dasharray: 2.2;
+}
+
+
+.city,.location{
+  font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: regular;
+  font-size: 12px;
+  fill:#333;
+}
+
+.city-dot{
+    fill:#333;
+    stroke:none;
+}
+.location-stroke{stroke:#333;}
+
+.capital{
+    font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    fill:#333;
+}
+
+.capital-dot{
+    fill:#333;
+    stroke:none;
+
+}
+
+.country{
+  font-family: "Guardian Headline", "Guardian Egyptian Web", "Guardian Headline Full", Georgia, serif;  
+  font-weight: bold;
+  text-anchor:middle;
+  font-size: 14px;
+  fill:#333;
+}
+
+.area{
+    font-family: 'Guardian Text Sans Web', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    fill:#333;
+}
+
+
+
+.text-water{
+  fill:#056DA1;
+  @include fs-bodyHeading(2);
+
+}
+
+//dots
+g circle{
+    stroke:#FFF; stroke-width:1px;
+}
+.airstrike-shelling-bombing{fill:#1896d7;}
+.russian-ground-movement{fill:#f5be2c;}
+.attack{fill:#c70000;}
+.border-crossing-point{fill:#ed6300;}
+.ukranian-ground-movement{fill:#f5be2c;}
+.russian-capture{fill:#ed6300;}
+
+//text
+p{
+    span{
+        color:#FFF;
+        padding: 5px;
+        border-radius:20px;
+    }
+    .airstrike-shelling-bombing{background:#1896d7;}
+    .russian-ground-movement{background:#f5be2c;}
+    .attack{background:#c70000;}
+    .border-crossing-point{background:#ed6300;}
+    .ukranian-ground-movement{background:#f5be2c;}
+    .russian-capture{background:#ed6300;}
+}
+
+
+.tooltip-map-list{
+    pointer-events: none;
+    min-width:150px;
+    max-width: 300px;
+    height: max-content;
+    padding:8px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #333;
+    color: #333333;
+    border-top: 1px solid #333;
+    position: absolute;
+    z-index: 100000;
+    line-height: 18.2px;
+    cursor: pointer;
+
+    opacity:0;
+
+    &.over{
+        opacity: 1;
+    }
+
+    font-size: 14px;
+
+    @include fs-header(3);
+}
+
+.annotation-wrapper{
+
+    position: relative;
+
+    .annotation{
+
+        //tspan{pointer-events: none;}
+
+        position: absolute;
+        
+        svg{
+            overflow: visible;
+
+
+            path{
+                stroke: #333;
+                stroke-width:2px;
+                fill:none;
+                stroke:#333;
+            }
+
+            text{
+                width: 150px;
+                @include fs-textSans(1);
+                font-weight: bold;
+                margin-left: 5px;
+
+                display: block;
+            }
+        }
+    }
+
+
+
+    
+}
+
+.annotation-line{
+    stroke:2px;
+}
+
+.russian-move{
+    fill: none;
+    stroke:#c70000;
+
+    @include mq(mobile) {
+         stroke-width:2px;
+    }
+
+    @include mq(desktop) {
+         stroke-width:4px;
+    }
+   
+}
+
+.ukranian-move{
+    fill: none;
+    stroke:#00b2ff;
+    stroke-width:4px;
+}
+
+#arrow-head-russia{
+    fill: #c70000;
+}
+
+#arrow-head-ukraine{
+    fill: #00b2ff;
+}
+
+.scroll-text{
+    top: 48px;
+}
+
+.scroll-text__div {
+
+    hr{
+        border: .7px solid #333;
+        background:#333;
+        margin-left: 0;
+        padding: 0;
+        margin: 0;
+        -webkit-transition: width 1s ease-in-out;
+        -moz-transition: width 1s ease-in-out;
+        -o-transition: width 1s ease-in-out;
+        transition: width 1s ease-in-out;
+        
+    }
+
+    
+    .hr1{width:0%;}
+    .hr2{width:25%;}
+    .hr3{width:50%;}
+    .hr4{width:75%;}
+
+    h2{
+        margin:0;
+        padding-top: 3px;
+        @include fs-header(5); margin-bottom: 8px;
+        width: 100%;
+        margin-left: 0;
+        background-color: #ffffff !important;
+        border-top: 1px solid #333;
+        margin-bottom: 1rem;
+        font-family: GuardianTextEgyptian,Guardian Text Egyptian Web,Georgia,serif;
+        font-size: 18px;
+        line-height: 21px;
+        background-color: #333333;
+    }
+
+
+    max-width: 330px;
+
+    @include mq($from: 100px, $until: 499px) {
+        max-width: 100%;
+    }
+
+
+    width: 100%;
+    text-align: left;
+    margin-left: 0px;
+    padding: 6px 10px 0px;
+    padding-top: 6px;
+    padding-bottom: 0px;
+    font-size: 28px;
+    line-height: 32px;
+    font-family: "Guardian Headline","Guardian Egyptian Web","Guardian Headline Full",Georgia,serif;
+    font-weight: normal;
+    color: #000;
+    font-size: 16px;
+    line-height: 22px;
+    position: relative;
+    padding-top: 4px;
+    padding-bottom: 6px;
+    box-sizing: border-box;
+    -webkit-transform: translate3d(0, 0, 0);
+
+    box-shadow:none !important;
+    border:none !important;
+
 }

@@ -1,8 +1,15 @@
 {
-    "title": "Project name",
-    "docData": "",
-    "path": "3019/10/test2",
-    "mockHeadline": "This is a mock headline. Change it in config.json",
-    "mockStandfirst": "This is a mock standfirst. Change it in config.json",
-    "mockParagraphBefore": ""
+    "title": "interactive-russian-deployments-ukraine",
+    "docData": "https://interactive.guim.co.uk/docsdata/1rCT-QZlo0DNgXXakzyaV8QnB0uQNjoWAfVujgNeA1NY.json",
+    "path": "2022/02/interactive-russian-deployments-ukraine",
+    "mockHeadline": "Russian deployments in Ukraine",
+    "mockStandfirst": "Map showing russian troops surrounding Ukraine",
+    "mockParagraphBefore": "",
+    "previousUses": [
+    	{
+    		"title": "",
+		    "docData": "",
+		    "path": ""
+    	}
+    ]
 }
