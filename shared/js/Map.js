@@ -92,6 +92,36 @@ export default class Map {
 
 	}
 
+	zoomToLocation(scale, duration = 700, fade = false, location, callback = null){
+
+		const s = scale / Math.min((this.b[1][0] - this.b[0][0]) / this.width, (this.b[1][1] - this.b[0][1]) / this.height);  
+
+		const t = [(this.width - s * (this.b[1][0] + this.b[0][0])) / 2, (this.height - s * (this.b[1][1] + this.b[0][1])) / 2];
+
+		this.projection
+		.scale(s)
+		.translate(t)
+
+		this.raster_width = (this.b[1][0] - this.b[0][0]) * s;
+		this.raster_height = (this.b[1][1] - this.b[0][1]) * s;
+
+		let projectedCoordinates = this.projection(location)
+
+		this.rtranslate_x = ((this.width - this.raster_width) / 2) + ((this.width / 2) - projectedCoordinates[0]);
+		this.rtranslate_y = ((this.height - this.raster_height) / 2) + ((this.height / 2) - projectedCoordinates[1]);
+
+		this.image
+			.transition()
+			.duration(duration)
+			.ease(d3.easeCubic)
+			.attr("width", this.raster_width)
+			.attr("height", this.raster_height)
+			.attr("transform", "translate(" + this.rtranslate_x + ", " + this.rtranslate_y + ")")
+			.style('opacity', fade == true ? 0 : 1)
+			.on('end', callback)
+
+		this.scale = scale;
+	}
 
 	makeLabels(node, object = [{name:'Mariupol', coordinates:[37.549444,47.095833], type:'city', offset:[10,7], align:'end'}], translate = [0,0]){
 
