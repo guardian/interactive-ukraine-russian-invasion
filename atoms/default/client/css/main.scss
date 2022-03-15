@@ -102,11 +102,9 @@ root {
 
     .key-dot{
         width: 12px; height: 12px;border-radius: 50px;background:black; margin-right: 3px;
-        &.border{background:#ed6300;}
         &.airstrike{background:#1896d7;}
         &.russian-attack{background:#c70000; }
-        &.russian-ground{background:#f5be2c;}
-        &.russian-capture{background:#ed6300; }
+        &.russian-ground{background:#c70000;}
         &.ukranian-ground{background:#f5be2c; }
 
     }

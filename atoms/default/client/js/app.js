@@ -1,9 +1,10 @@
 import * as d3 from 'd3'
 import * as topojson from 'topojson'
 import Map from 'shared/js/Map'
-import geo from 'assets/geo-mob.json'
+import geo from 'assets/json/extents.json'
 import prewar from 'assets/pre-war.json'
 import arrowsGeo from 'assets/arrows.json'
+import overlaysGeo from 'assets/json/merged.json'
 import ScrollyTeller from "shared/js/scrollyteller"
 import data from "assets/json/data.json"
 
@@ -50,21 +51,33 @@ const geographies = [
 {name: 'Dnieper river', coordinates:[32.8743653,49.249875], type:'text-water'}
 ]
 
-const isMobile = window.matchMedia('(max-width: 600px)').matches;
+const isMobile = window.matchMedia('(max-width: 800px)').matches;
+
+console.log('isMobile', isMobile)
 
 const atomEl = d3.select('#scrolly-1').node();
 
 const width = atomEl.getBoundingClientRect().width;
-const height = 403.92 * width / 408;
+const height = isMobile ? 667.92 * width / 597.12 : 426 * width / 714.96;
 const ratio = width * 100 / 1260;
+
+let ukraineBgImage = isMobile ? 'ukraine-v' : 'ukraine-h';
+let southUkraineBgImage = isMobile ? 'south-ukraine-v' : 'south-ukraine-h';
+let kievBgImage = isMobile ? 'kiev-v' : 'kiev-h';
+
+let ukraineObj = isMobile ? geo.objects['ukraine-v'] : geo.objects['ukraine-h'];
+
+let southUkraineObj =  isMobile ?  geo.objects['south-ukraine-v'] : geo.objects['south-ukraine-h'];
+
+let kievObj = isMobile ? geo.objects['kiev-v'] : geo.objects['kiev-h'];
 
 
 const tooltip = d3.select('.tooltip-map-list')
 const annotation = d3.select('.annotation')
 
 const svg = d3.select('.svg-wrapper')
-.attr('width', width)
-.attr('height', height)
+/*.attr('width', width)
+.attr('height', height)*/
 .attr("viewBox", `0 0 ${width} ${height}`)
 
 const overlays = svg.select('.overlays');
@@ -74,12 +87,16 @@ const dots = overlays.append('g')
 
 const backgrounds = svg.select('.backgrounds')
 
-const kiev = new Map(width, width * 714.96 / 660, geo, geo.objects['kiev-vertical'], 1)
-const kievBg = kiev.makeBackground(backgrounds, `<%= path %>/kiev-v.jpg`, 'kiev-bg', overlays)
+const kiev = new Map(width, height, geo, kievObj, 1)
+const kievBg = kiev.makeBackground(backgrounds, `<%= path %>/jpg/${kievBgImage}.jpg`, 'kiev-bg', overlays)
 svg.select('.kiev-bg').attr('display', 'none')
 
-const ukraine = new Map(width, height, geo, geo.objects['ukraine-vertical'], 1)
-const ukraineBg = ukraine.makeBackground(backgrounds, `<%= path %>/bg-v.jpg`, 'ukraine-bg', overlays)
+const southUkraine = new Map(width, height, geo, southUkraineObj, 1)
+const southUkrainekieBg = southUkraine.makeBackground(backgrounds, `<%= path %>/jpg/${southUkraineBgImage}.jpg`, 'south-ukraine-bg', overlays)
+svg.select('.south-ukraine-bg').attr('display', 'none')
+
+const ukraine = new Map(width, height, geo, ukraineObj, 1)
+const ukraineBg = ukraine.makeBackground(backgrounds, `<%= path %>/jpg/${ukraineBgImage}.jpg`, 'ukraine-bg', overlays)
 
 ukraine.makeLabels(labels, cities)
 ukraine.makeLabels(labels, areas)
@@ -104,11 +121,11 @@ triggerPoints.forEach((d,i) => {
 		arrows.selectAll('path').remove()
 		dots.selectAll('circle').remove()
 		labels.selectAll('*').remove()
-		overlays.selectAll('image').classed('render', false)
+		//overlays.selectAll('image').classed('render', false)
 
 		let points = mapPoints.filter(f => f['scrolly-stage'] === String(i+1));
 		let caption = points.find(f => f['caption-on-viz'] === 'Y');
-		let overlay = overlays.select('.img-' + d['image-overlay'].split('.png')[0]);
+		//let overlay = overlays.select('.img-' + d['image-overlay'].split('.png')[0]);
 
 		if(d.scope === 'wider-Ukraine'){
 			console.log('wider ukraine')
@@ -122,7 +139,7 @@ triggerPoints.forEach((d,i) => {
 				ukraine.makeLabels(labels, cities, [x,y])
 				ukraine.makeLabels(labels, areas, [x,y])
 
-				if(overlay.node())
+				/*if(overlay.node())
 				{
 					overlay.classed('render', true);
 
@@ -130,7 +147,7 @@ triggerPoints.forEach((d,i) => {
 					.attr("width", ukraine.getTransform().w)
 					.attr("height", ukraine.getTransform().h)
 					.attr('transform',`translate(${ukraine.getTransform().x}, ${ukraine.getTransform().y})`)
-				}
+				}*/
 
 				dots.selectAll('circle')
 				.data(topojson.feature(prewar, prewar.objects['pre-war']).features)
@@ -148,15 +165,32 @@ triggerPoints.forEach((d,i) => {
 			backgrounds.select('.ukraine-bg').attr('display','block')
 			backgrounds.select('.kiev-bg').attr('display','none')
 
-			let scale = isMobile ? 2 : 1.9;
-			let x = isMobile ? 0 : 120;
-			let y = isMobile ? 0 : -200;
+			let scale = isMobile ? 1.5 : 1.3;
+			let x = isMobile ? 0 : 150;
+			let y = isMobile ? -100 : -100;
 
 			ukraine.scaleImage(scale, 300, false, {x:x, y:y}, () => {
 
 				ukraine.makeLabels(labels, cities, [x,y])
 				ukraine.makeLabels(labels, areas, [x,y])
 
+				console.log(d['image-overlay'])
+
+
+				/*overlays.selectAll('path')
+				.data(topojson.feature(overlaysGeo, overlaysGeo.objects.merged.geometries.find(f => f.properties.layer === 'overlay-2502')).features)
+				.enter()
+				.append('path')
+				.attr('d', ukraine.getPath())*/
+
+				//ukraine.makeArea(overlays, topojson.feature(overlaysGeo, overlaysGeo.objects.merged.geometries.find(f => f.properties.layer === 'overlay-2502')), [x,y])
+
+				/*overlays.append('path')
+				.datum(topojson.feature(overlaysGeo, overlaysGeo.objects.merged.geometries.find(f => f.properties.layer === 'overlay-2802')))
+				.attr('d', ukraine.getPath())
+				.attr('transform',`translate(${ukraine.getTransform().x}px, ${ukraine.getTransform().y}px)`)*/
+
+/*
 				if(overlay.node())
 				{
 					overlay.classed('render', true)
@@ -165,16 +199,9 @@ triggerPoints.forEach((d,i) => {
 					.attr("width", ukraine.getTransform().w)
 					.attr("height", ukraine.getTransform().h)
 					.attr('transform',`translate(${ukraine.getTransform().x}, ${ukraine.getTransform().y})`)
-				}
+				}*/
 
 				ukraine.makePoints(dots, points, isMobile ? 4 : 5, [x,y], manageMove, manageOver, manageOut)	
-
-				if(caption && !isMobile)
-				{
-					annotation.style('display', 'block')
-
-					ukraine.makeAnnotation(annotation, caption.caption, [caption.long,caption.lat], [x,y], {width:150, align:caption['caption-align']})
-				}
 
 				if(d['arrow-overlay'])
 				{
@@ -187,40 +214,19 @@ triggerPoints.forEach((d,i) => {
 		else if(d.scope === 'south-Ukraine'){
 			console.log('south ukraine')
 
-			let scale = 3;
+			let scale = 10;
 			let x = isMobile ? 0 : 0;
-			let y = isMobile ? -200 : -450;
+			let y = isMobile ? 0 : 0;
 
-			ukraine.scaleImage(scale, 300, false, {x:x, y:y}, () => {
+			ukraine.scaleImage(scale, 300, true,{x:x, y:y}, () => {
 
-				ukraine.makeLabels(labels, cities, [x,y])
-				ukraine.makeLabels(labels, areas, [x,y])
+				backgrounds.select('.ukraine-bg').attr('display','none')
+				backgrounds.select('.kiev-bg').attr('display','none')
+				backgrounds.select('.south-ukraine-bg').attr('display','block')
 
-				if(overlay.node())
-				{
-					overlay.classed('render', true)
 
-					overlay
-					.attr("width", ukraine.getTransform().w)
-					.attr("height", ukraine.getTransform().h)
-					.attr('transform',`translate(${ukraine.getTransform().x}, ${ukraine.getTransform().y})`)
-				}
-
-				if(caption && !isMobile)
-				{
-					annotation.style('display', 'block')
-
-					ukraine.makeAnnotation(annotation, caption.caption, [caption.long,caption.lat], [x,y], {width:150, align:caption['caption-align']})
-				}
-
-				if(d['arrow-overlay'])
-				{
-					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
-
-					ukraine.makeArrows(arrows, feature, "url(#arrow-head-russia)", [x,y], 'russian-move')
-				}		
-				
 			})
+
 		}
 		else if(d.scope === 'Kyiv')
 		{
@@ -235,13 +241,14 @@ triggerPoints.forEach((d,i) => {
 			ukraine.scaleImage(scale, 300, true,{x:x, y:y}, () => {
 
 				backgrounds.select('.ukraine-bg').attr('display','none')
+				backgrounds.select('.south-ukraine-bg').attr('display','none')
 				backgrounds.select('.kiev-bg').attr('display','block')
 
 				kiev.makeLabels(labels, locations)
 
 				kiev.makePoints(dots, points, isMobile ? 4 : 5, [0,0], manageMove, manageOver, manageOut)
 
-				if(overlay.node())
+				/*if(overlay.node())
 				{
 					overlay.classed('render', true)
 
@@ -249,15 +256,7 @@ triggerPoints.forEach((d,i) => {
 					.attr("width", kiev.getTransform().w)
 					.attr("height", kiev.getTransform().h)
 					.attr('transform',`translate(${kiev.getTransform().x}, ${kiev.getTransform().y})`)
-				}
-
-				if(caption && !isMobile)
-				{
-					annotation.style('display', 'block')
-
-					kiev.makeAnnotation(annotation, caption.caption, [caption.long,caption.lat], [0,0], {width:150, align:caption['caption-align']})
-
-				}
+				}*/
 
 				if(d['arrow-overlay'])
 				{
@@ -314,3 +313,4 @@ const manageOver = (event, el) => {
 const manageOut = (event) => {
 	tooltip.classed('over', false)
 }
+

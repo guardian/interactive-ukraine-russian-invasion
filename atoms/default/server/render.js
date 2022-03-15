@@ -30,11 +30,7 @@ export async function render() {
 
 	}
 
-	//let overlayGroups = [...new Set(data[0].data.map(d => d.scope))];
 	let overlayImages = [...new Set(data[0].data.map(d => d['image-overlay']))];
-	//let htmlGroups = '';
-
-	console.log(overlayImages)
 
 	let images = '';
 
@@ -42,23 +38,6 @@ export async function render() {
 
 		images += `<image class="map-overlay img-${overlayImages[i].split(".png")[0]}" xlink:href="<%= path %>/overlays/${overlayImages[i]}"></image>`	
 	}
-
-	/*for(let group of overlayGroups)
-	{
-		
-		
-		let filter = data[0].data.filter(f => f.scope === group);
-
-		for(let i = 0; i < filter.length; i++)
-		{
-			console.log(filter[i]['image-overlay'])
-			if(filter[i]['image-overlay'])images += `<image class="map-overlay img-${filter[i]['image-overlay'].split(".png")[0]}" xlink:href="<%= path %>/overlays/${filter[i]['image-overlay']}"></image>`	
-		}
-
-		//htmlGroups += `<g class='${group}'>${images}</g>`
-		htmlGroups += images
-	}*/
-
 
 	return `<div id="scrolly-1">
 	    <div class="scroll-wrapper">
@@ -74,28 +53,16 @@ export async function render() {
 		            		<p>Russian invasion route</p>
 		            	</div>
 						<div class='colour-key-element'>
-							<div class='key-dot border'></div>
-							<p>Russian border crossing</p>
-						</div>
-						<div class='colour-key-element'>
 							<div class='key-dot airstrike'></div>
-							<p>Airstrike, shelling or bombing</p>
-						</div>
-						<div class='colour-key-element'>
-							<div class='key-dot russian-attack'></div>
-							<p>Russian attack</p>
+							<p>Russian airstrike or shelling</p>
 						</div>
 						<div class='colour-key-element'>
 							<div class='key-dot russian-ground'></div>
-							<p>Russian ground movement</p>
-						</div>
-						<div class='colour-key-element'>
-							<div class='key-dot russian-capture'></div>
-							<p>Russian capture</p>
+							<p>Russian attack or movement</p>
 						</div>
 						<div class='colour-key-element'>
 							<div class='key-dot ukranian-ground'></div>
-							<p>Ukrainian ground movement or attack</p>
+							<p>Ukrainian attack or movement </p>
 						</div>
 	            	</div>
 	            	<div class='annotation-wrapper'>
@@ -132,7 +99,7 @@ export async function render() {
 						    </marker>
 					    </defs>
 	            		<g class='backgrounds'></g>
-	            		<g class='overlays'>${images}</g>
+	            		<g class='overlays'></g>
 	            	</svg>
 	            	<div class='tooltip-map-list'>
 						<div class="tooltip-date"></div>

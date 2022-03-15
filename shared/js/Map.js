@@ -197,6 +197,18 @@ export default class Map {
 		.attr("marker-end",arrowHead); 
 	}
 
+	makeArea(node, feature,translate=[0,0], className=null){
+
+		node.selectAll('path').remove()
+
+		node.append('path')
+		.datum(feature)
+		.attr('d', this.path)
+		.attr('transform', `translate(${translate[0]}, ${translate[1]})`)
+		.attr('class', className)
+		//.style('filter','blur(4px)');
+	}
+
 	getPoints(longLat){
 
 		return this.projection(longLat)
