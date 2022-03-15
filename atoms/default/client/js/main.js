@@ -1,8 +1,26 @@
+/**** INTERACTIVE ****/ 
+
 var el = document.createElement('script');
 el.src = '<%= atomPath %>/app.js';
 document.body.appendChild(el);
 
+/**** ARTICLE PAGE ****/ 
 
+// const styles = [].slice.apply(document.querySelectorAll("style"));
+// const wrapper = document.querySelector("#scrolly-1");
+// const parentPage = window.parent.document;
+
+// styles.forEach((style) => {
+//   parentPage.body.appendChild(style);
+// });
+
+// window.frameElement.parentNode.innerHTML = wrapper.outerHTML;
+
+// var el = parentPage.createElement("script");
+// el.src = "<%= atomPath %>/app.js";
+// parentPage.body.appendChild(el);
+
+/**** EVERYTHING ELSE ****/ 
 
 setTimeout(() => {
   if (window.resize) {  
