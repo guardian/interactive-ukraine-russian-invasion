@@ -99,7 +99,7 @@ export async function render() {
 						    </marker>
 					    </defs>
 	            		<g class='backgrounds'></g>
-	            		<g class='overlays'></g>
+	            		<g class='overlays'><patth></path></g>
 	            	</svg>
 	            	<div class='tooltip-map-list'>
 						<div class="tooltip-date"></div>
