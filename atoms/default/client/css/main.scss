@@ -237,6 +237,16 @@ g circle{
 .ukranian-ground-movement{fill:#f5be2c;}
 .russian-capture{fill:#ed6300;}
 
+g circle.buildup {
+    fill: #c70000;
+}
+
+g circle.bubble {
+    stroke: #c70000;
+    fill: #c70000;
+    fill-opacity: 0.1;
+}
+
 //text
 p{
     span{

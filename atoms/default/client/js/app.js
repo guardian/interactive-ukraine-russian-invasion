@@ -2,7 +2,8 @@ import * as d3 from 'd3'
 import * as topojson from 'topojson'
 import Map from 'shared/js/Map'
 import geo from 'assets/json/extents.json'
-import prewar from 'assets/pre-war.json'
+import prewar from 'assets/pre-invasion-deployments.json'
+import troopNumbers from 'assets/troop-numbers.json'
 import arrowsGeo from 'assets/arrows.json'
 import overlaysGeo from 'assets/json/merged.json'
 import ScrollyTeller from "shared/js/scrollyteller"
@@ -84,6 +85,7 @@ const overlays = svg.select('.overlays');
 const arrows = overlays.append('g')
 const labels = overlays.append('g')
 const dots = overlays.append('g')
+const bubbles = overlays.append('g')
 
 const backgrounds = svg.select('.backgrounds')
 
@@ -120,6 +122,7 @@ triggerPoints.forEach((d,i) => {
 		tooltip.classed('over', false)
 		arrows.selectAll('path').remove()
 		dots.selectAll('circle').remove()
+		bubbles.selectAll('circle').remove()
 		labels.selectAll('*').remove()
 		//overlays.selectAll('image').classed('render', false)
 
@@ -150,12 +153,21 @@ triggerPoints.forEach((d,i) => {
 				}*/
 
 				dots.selectAll('circle')
-				.data(topojson.feature(prewar, prewar.objects['pre-war']).features)
-				.enter()
-				.append('circle')
-				.attr('r', 5)
-				.attr('cx', d =>ukraine.getPoints([d.properties.Longitude, d.properties.Latitude])[0] + x)
-				.attr('cy', d => ukraine.getPoints([d.properties.Longitude, d.properties.Latitude])[1] + y)
+					.data(prewar)
+					.join('circle')
+					.attr('class', 'buildup')
+					.attr('r', 5)
+					.attr('cx', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
+					.attr('cy', d =>ukraine.getPoints([d.Longitude, d.Latitude])[1])
+
+				bubbles.selectAll('circle')
+					.data(troopNumbers)
+					.join('circle')
+					.attr('class', 'bubble')
+					.attr('r', d => Math.sqrt(d.Value / Math.PI))
+					.attr('cx', d => ukraine.getPoints([d.Longitude, d.Latitude])[0])
+					.attr('cy', d => ukraine.getPoints([d.Longitude, d.Latitude])[1])
+				
 			})
 		}
 		else if(d.scope === 'Ukraine')
