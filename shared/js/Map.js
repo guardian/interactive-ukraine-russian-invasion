@@ -229,14 +229,12 @@ export default class Map {
 
 	makeArea(node, feature,translate=[0,0], className=null){
 
-		node.selectAll('path').remove()
-
 		node.append('path')
 		.datum(feature)
 		.attr('d', this.path)
 		.attr('transform', `translate(${translate[0]}, ${translate[1]})`)
-		.attr('class', className)
-		//.style('filter','blur(4px)');
+		.attr('class', 'area-control')
+		
 	}
 
 	getPoints(longLat){

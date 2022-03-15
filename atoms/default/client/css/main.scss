@@ -113,27 +113,10 @@ root {
 }
 
 
-.overlays {
-
-    .map-overlay{
-       mix-blend-mode:multiply;
-
-       opacity: 0;
-
-       &.render{
-        opacity: .3;
-    }
-
-    &.img-20220222-overlay.render{
-        opacity: 1;
-    }
-}
-
-.Ukraine > .map-overlay:first-of-type{
-
-    opacity: 1;
-}
-
+.area-control{
+    fill:#c70000;
+    filter:blur(2px);
+    opacity: .3;
 }
 
 .donbas{

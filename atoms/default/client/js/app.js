@@ -5,7 +5,7 @@ import geo from 'assets/json/extents.json'
 import prewar from 'assets/pre-invasion-deployments.json'
 import troopNumbers from 'assets/troop-numbers.json'
 import arrowsGeo from 'assets/arrows.json'
-import overlaysGeo from 'assets/json/merged.json'
+import overlaysGeo from 'assets/json/areas.json'
 import ScrollyTeller from "shared/js/scrollyteller"
 import data from "assets/json/data.json"
 
@@ -28,7 +28,8 @@ const cities = [
 {name:'Kyiv', coordinates:[30.523399,50.450100], type:'capital', offset:[10,7], align:'start'},
 {name:'Kharkiv', coordinates:[36.25904386,49.99533397], type:'city', offset:[10,7], align:'end'},
 {name:'Lviv', coordinates:[24.0066233,49.836511], type:'city', offset:[10,7], align:'start'},
-{name:'Mariupol', coordinates:[37.549444,47.095833], type:'city', offset:[10,7], align:'end'}
+{name:'Mariupol', coordinates:[37.549444,47.095833], type:'city', offset:[10,7], align:'end'},
+{name:'Kherson', coordinates:[32.5943554,46.6555112], type:'city', offset:[10,7], align:'start'}
 ]
 
 const locations = [
@@ -39,7 +40,7 @@ const locations = [
 
 const areas = [
 {name:'Crimea', coordinates:[34.4975073,45.345141], type:'area', offset:[0,0], align:'middle'},
-{name:'Donbass', coordinates:[38.9081713,48.11942], type:'area', offset:[0,0], align:'middle'}
+{name:'Separatist-controlled area', coordinates:[38.9081713,48.11942], type:'area', offset:[0,0], align:'middle'}
 ]
 
 const countries = [
@@ -86,6 +87,11 @@ const arrows = overlays.append('g')
 const labels = overlays.append('g')
 const dots = overlays.append('g')
 const bubbles = overlays.append('g')
+const defs = d3.select('defs')
+
+defs.append('mask')
+.attr('id', 'map-mask')
+
 
 const backgrounds = svg.select('.backgrounds')
 
@@ -114,6 +120,8 @@ const scrolly = new ScrollyTeller({
 const triggerPoints = data[0].data;
 const mapPoints = data[1].data;
 
+let currentScale = 1;
+
 triggerPoints.forEach((d,i) => {
 
 	scrolly.addTrigger({num: i+1, do: () => {
@@ -124,7 +132,7 @@ triggerPoints.forEach((d,i) => {
 		dots.selectAll('circle').remove()
 		bubbles.selectAll('circle').remove()
 		labels.selectAll('*').remove()
-		//overlays.selectAll('image').classed('render', false)
+		overlays.selectAll('path').remove()
 
 		let points = mapPoints.filter(f => f['scrolly-stage'] === String(i+1));
 		let caption = points.find(f => f['caption-on-viz'] === 'Y');
@@ -142,15 +150,7 @@ triggerPoints.forEach((d,i) => {
 				ukraine.makeLabels(labels, cities, [x,y])
 				ukraine.makeLabels(labels, areas, [x,y])
 
-				/*if(overlay.node())
-				{
-					overlay.classed('render', true);
-
-					overlay
-					.attr("width", ukraine.getTransform().w)
-					.attr("height", ukraine.getTransform().h)
-					.attr('transform',`translate(${ukraine.getTransform().x}, ${ukraine.getTransform().y})`)
-				}*/
+				ukraine.makeArea(overlays, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
 
 				dots.selectAll('circle')
 					.data(prewar)
@@ -169,6 +169,8 @@ triggerPoints.forEach((d,i) => {
 					.attr('cy', d => ukraine.getPoints([d.Longitude, d.Latitude])[1])
 				
 			})
+
+			currentScale = scale
 		}
 		else if(d.scope === 'Ukraine')
 		{
@@ -178,50 +180,27 @@ triggerPoints.forEach((d,i) => {
 			backgrounds.select('.kiev-bg').attr('display','none')
 
 			let scale = isMobile ? 1.5 : 1.3;
-			let x = isMobile ? 0 : 150;
+			let x = isMobile ? 80 : 150;
 			let y = isMobile ? -100 : -100;
 
-			ukraine.scaleImage(scale, 300, false, {x:x, y:y}, () => {
-
-				ukraine.makeLabels(labels, cities, [x,y])
-				ukraine.makeLabels(labels, areas, [x,y])
-
-				console.log(d['image-overlay'])
 
 
-				/*overlays.selectAll('path')
-				.data(topojson.feature(overlaysGeo, overlaysGeo.objects.merged.geometries.find(f => f.properties.layer === 'overlay-2502')).features)
-				.enter()
-				.append('path')
-				.attr('d', ukraine.getPath())*/
+			if(currentScale != scale)
+			{
+				ukraine.scaleImage(scale, 300, false, {x:x, y:y}, () => {
 
-				//ukraine.makeArea(overlays, topojson.feature(overlaysGeo, overlaysGeo.objects.merged.geometries.find(f => f.properties.layer === 'overlay-2502')), [x,y])
+					renderUkraine(x,y,d,points)
+				
+				})
 
-				/*overlays.append('path')
-				.datum(topojson.feature(overlaysGeo, overlaysGeo.objects.merged.geometries.find(f => f.properties.layer === 'overlay-2802')))
-				.attr('d', ukraine.getPath())
-				.attr('transform',`translate(${ukraine.getTransform().x}px, ${ukraine.getTransform().y}px)`)*/
+				currentScale = scale
+			}
+			else
+			{
+				renderUkraine(x,y,d,points)
+			}
 
-/*
-				if(overlay.node())
-				{
-					overlay.classed('render', true)
-
-					overlay
-					.attr("width", ukraine.getTransform().w)
-					.attr("height", ukraine.getTransform().h)
-					.attr('transform',`translate(${ukraine.getTransform().x}, ${ukraine.getTransform().y})`)
-				}*/
-
-				ukraine.makePoints(dots, points, isMobile ? 4 : 5, [x,y], manageMove, manageOver, manageOut)	
-
-				if(d['arrow-overlay'])
-				{
-					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
-
-					ukraine.makeArrows(arrows, feature, "url(#arrow-head-russia)", [x,y], 'russian-move')
-				}	
-			})
+			
 		}
 		else if(d.scope === 'south-Ukraine'){
 			console.log('south ukraine')
@@ -230,10 +209,15 @@ triggerPoints.forEach((d,i) => {
 
 			let scale = 2;
 			let southUkraineCenterCoordinates = [33.947754, 45.981934]
+
 			ukraine.zoomToLocation(scale, 600, true, southUkraineCenterCoordinates, () => {
 				backgrounds.select('.ukraine-bg').attr('display','none')
 				backgrounds.select('.kiev-bg').attr('display','none')
+
+				southUkraine.makeArea(overlays, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])))
 			})
+
+			currentScale = scale
 
 		}
 		else if(d.scope === 'Kyiv')
@@ -243,8 +227,8 @@ triggerPoints.forEach((d,i) => {
 			dots.selectAll('circle').remove()
 
 			let scale = 10;
-			let x = isMobile ? 0 : 2000;
-			let y = isMobile ? 0 : 800;
+			let x = isMobile ? 0 : 0;
+			let y = isMobile ? 0 : 0;
 
 			let kyiv = cities.filter(c => c.name === 'Kyiv')[0];
 
@@ -259,24 +243,18 @@ triggerPoints.forEach((d,i) => {
 
 				kiev.makePoints(dots, points, isMobile ? 4 : 5, [0,0], manageMove, manageOver, manageOut)
 
-				/*if(overlay.node())
-				{
-					overlay.classed('render', true)
-
-					overlay
-					.attr("width", kiev.getTransform().w)
-					.attr("height", kiev.getTransform().h)
-					.attr('transform',`translate(${kiev.getTransform().x}, ${kiev.getTransform().y})`)
-				}*/
+				kiev.makeArea(overlays, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
 
 				if(d['arrow-overlay'])
 				{
 					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
 
-					ukraine.makeArrows(arrows, feature, "url(#arrow-head-russia)", [x,y], 'russian-move')
+					kiev.makeArrows(arrows, feature, "url(#arrow-head-russia)", [x,y], 'russian-move')
 				}	
 
 			})
+
+			currentScale = scale
 		}
 
 	}})
@@ -323,5 +301,21 @@ const manageOver = (event, el) => {
 
 const manageOut = (event) => {
 	tooltip.classed('over', false)
+}
+
+const renderUkraine = (x,y,d,points) => {
+	ukraine.makeLabels(labels, cities, [x,y])
+	ukraine.makeLabels(labels, areas, [x,y])
+
+	ukraine.makeArea(overlays, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
+
+	ukraine.makePoints(dots, points, isMobile ? 4 : 5, [x,y], manageMove, manageOver, manageOut)	
+
+	if(d['arrow-overlay'])
+	{
+		let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
+
+		ukraine.makeArrows(arrows, feature, "url(#arrow-head-russia)", [x,y], 'russian-move')
+	}	
 }
 
