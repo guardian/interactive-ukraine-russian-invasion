@@ -106,7 +106,7 @@ const scrolly = new ScrollyTeller({
 	parent: document.querySelector("#scrolly-1"),
     triggerTop: .5, // percentage from the top of the screen that the trigger should fire
     triggerTopMobile: 0.75,
-    transparentUntilActive: isMobile ? false : true
+    transparentUntilActive: false
 });
 
 const triggerPoints = data[0].data;
