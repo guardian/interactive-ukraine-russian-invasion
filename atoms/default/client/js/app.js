@@ -164,7 +164,10 @@ triggerPoints.forEach((d,i) => {
 					.data(troopNumbers)
 					.join('circle')
 					.attr('class', 'bubble')
-					.attr('r', d => Math.sqrt(d.Value / Math.PI))
+					.attr('r', d => {
+						let scaleFactor = isMobile ? 0.5 : 1;
+						return Math.sqrt(d.Value / Math.PI) * scaleFactor
+					})
 					.attr('cx', d => ukraine.getPoints([d.Longitude, d.Latitude])[0])
 					.attr('cy', d => ukraine.getPoints([d.Longitude, d.Latitude])[1])
 				
