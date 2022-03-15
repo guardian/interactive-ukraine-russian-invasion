@@ -48,6 +48,14 @@ Get the deployed links: `gulp url`
 The link can be pasted into a Composer file 
 
 
+### Deploy to article page
+
+Before deploying to article page, do the following:
+
+1. Comment out code under INTERACTIVE header in `main.js` and uncomment code under ARTICLE header.
+2. Comment out `@import "dcr_enhancer";` in `main.scss`
+3. Change path in `config.json` to prevent overwriting atom for interactive page.
+
 ### Testing in apps
 
 To test on the Guardian apps - follow our 
