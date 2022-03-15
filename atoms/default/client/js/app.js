@@ -2,7 +2,8 @@ import * as d3 from 'd3'
 import * as topojson from 'topojson'
 import Map from 'shared/js/Map'
 import geo from 'assets/json/extents.json'
-import prewar from 'assets/pre-war.json'
+import prewar from 'assets/pre-invasion-deployments.json'
+import troopNumbers from 'assets/troop-numbers.json'
 import arrowsGeo from 'assets/arrows.json'
 import overlaysGeo from 'assets/json/merged.json'
 import ScrollyTeller from "shared/js/scrollyteller"
@@ -84,6 +85,7 @@ const overlays = svg.select('.overlays');
 const arrows = overlays.append('g')
 const labels = overlays.append('g')
 const dots = overlays.append('g')
+const bubbles = overlays.append('g')
 
 const backgrounds = svg.select('.backgrounds')
 
@@ -120,6 +122,8 @@ triggerPoints.forEach((d,i) => {
 		tooltip.classed('over', false)
 		arrows.selectAll('path').remove()
 		dots.selectAll('circle').remove()
+		dots.selectAll('rect').remove()
+		bubbles.selectAll('circle').remove()
 		labels.selectAll('*').remove()
 		//overlays.selectAll('image').classed('render', false)
 
@@ -149,13 +153,31 @@ triggerPoints.forEach((d,i) => {
 					.attr('transform',`translate(${ukraine.getTransform().x}, ${ukraine.getTransform().y})`)
 				}*/
 
-				dots.selectAll('circle')
-				.data(topojson.feature(prewar, prewar.objects['pre-war']).features)
-				.enter()
-				.append('circle')
-				.attr('r', 5)
-				.attr('cx', d =>ukraine.getPoints([d.properties.Longitude, d.properties.Latitude])[0] + x)
-				.attr('cy', d => ukraine.getPoints([d.properties.Longitude, d.properties.Latitude])[1] + y)
+				dots.selectAll('rect')
+					.data(prewar)
+					.join('rect')
+					.attr('width', 6)
+					.attr('height', 6)
+					.attr('x', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
+					.attr('y', d =>ukraine.getPoints([d.Longitude, d.Latitude])[1])
+					.attr('transform', 'translate(-3, -3)')
+					.attr('fill', '#6b5840')
+
+				function circleRadius(d) {
+					return Math.sqrt(d.Value / Math.PI)
+				}
+
+				bubbles.selectAll('circle')
+					.data(troopNumbers)
+					.join('circle')
+					.attr('class', 'bubble')
+					.attr('r', d => Math.sqrt(d.Value / Math.PI))
+					.attr('cx', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
+					.attr('cy', d =>  {
+						let radius = circleRadius(d)
+						return ukraine.getPoints([d.Longitude, d.Latitude])[1] - radius
+					})
+				
 			})
 		}
 		else if(d.scope === 'Ukraine')
