@@ -28,7 +28,8 @@ const cities = [
 {name:'Kyiv', coordinates:[30.523399,50.450100], type:'capital', offset:[10,7], align:'start'},
 {name:'Kharkiv', coordinates:[36.25904386,49.99533397], type:'city', offset:[10,7], align:'end'},
 {name:'Lviv', coordinates:[24.0066233,49.836511], type:'city', offset:[10,7], align:'start'},
-{name:'Mariupol', coordinates:[37.549444,47.095833], type:'city', offset:[10,7], align:'end'}
+{name:'Mariupol', coordinates:[37.549444,47.095833], type:'city', offset:[10,7], align:'end'},
+{name:'Kherson', coordinates:[37.549444,47.095833], type:'city', offset:[10,7], align:'end'}
 ]
 
 const locations = [
@@ -178,7 +179,7 @@ triggerPoints.forEach((d,i) => {
 			backgrounds.select('.kiev-bg').attr('display','none')
 
 			let scale = isMobile ? 1.5 : 1.3;
-			let x = isMobile ? 0 : 150;
+			let x = isMobile ? 80 : 150;
 			let y = isMobile ? -100 : -100;
 
 			ukraine.scaleImage(scale, 300, false, {x:x, y:y}, () => {
