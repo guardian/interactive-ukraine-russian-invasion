@@ -122,7 +122,6 @@ triggerPoints.forEach((d,i) => {
 		tooltip.classed('over', false)
 		arrows.selectAll('path').remove()
 		dots.selectAll('circle').remove()
-		dots.selectAll('rect').remove()
 		bubbles.selectAll('circle').remove()
 		labels.selectAll('*').remove()
 		//overlays.selectAll('image').classed('render', false)
@@ -153,30 +152,21 @@ triggerPoints.forEach((d,i) => {
 					.attr('transform',`translate(${ukraine.getTransform().x}, ${ukraine.getTransform().y})`)
 				}*/
 
-				dots.selectAll('rect')
+				dots.selectAll('circle')
 					.data(prewar)
-					.join('rect')
-					.attr('width', 6)
-					.attr('height', 6)
-					.attr('x', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
-					.attr('y', d =>ukraine.getPoints([d.Longitude, d.Latitude])[1])
-					.attr('transform', 'translate(-3, -3)')
-					.attr('fill', '#6b5840')
-
-				function circleRadius(d) {
-					return Math.sqrt(d.Value / Math.PI)
-				}
+					.join('circle')
+					.attr('class', 'buildup')
+					.attr('r', 5)
+					.attr('cx', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
+					.attr('cy', d =>ukraine.getPoints([d.Longitude, d.Latitude])[1])
 
 				bubbles.selectAll('circle')
 					.data(troopNumbers)
 					.join('circle')
 					.attr('class', 'bubble')
 					.attr('r', d => Math.sqrt(d.Value / Math.PI))
-					.attr('cx', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
-					.attr('cy', d =>  {
-						let radius = circleRadius(d)
-						return ukraine.getPoints([d.Longitude, d.Latitude])[1] - radius
-					})
+					.attr('cx', d => ukraine.getPoints([d.Longitude, d.Latitude])[0])
+					.attr('cy', d => ukraine.getPoints([d.Longitude, d.Latitude])[1])
 				
 			})
 		}
