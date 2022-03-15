@@ -237,11 +237,11 @@ triggerPoints.forEach((d,i) => {
 			let kyiv = cities.filter(c => c.name === 'Kyiv')[0];
 
 			backgrounds.select('.kiev-bg').attr('display','block')
+			backgrounds.select('.south-ukraine-bg').attr('display','none')
 
 			ukraine.zoomToLocation(scale, 600, true, kyiv.coordinates, () => {
 
 				backgrounds.select('.ukraine-bg').attr('display','none')
-				backgrounds.select('.south-ukraine-bg').attr('display','none')
 
 				kiev.makeLabels(labels, locations)
 
