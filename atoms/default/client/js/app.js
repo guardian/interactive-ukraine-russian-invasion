@@ -238,7 +238,11 @@ triggerPoints.forEach((d,i) => {
 			let x = isMobile ? 0 : 2000;
 			let y = isMobile ? 0 : 800;
 
-			ukraine.scaleImage(scale, 300, true,{x:x, y:y}, () => {
+			let kyiv = cities.filter(c => c.name === 'Kyiv')[0];
+
+			backgrounds.select('.kiev-bg').attr('display','block')
+
+			ukraine.zoomToLocation(scale, 600, true, kyiv.coordinates, () => {
 
 				backgrounds.select('.ukraine-bg').attr('display','none')
 				backgrounds.select('.south-ukraine-bg').attr('display','none')
