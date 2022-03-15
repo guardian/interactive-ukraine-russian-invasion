@@ -214,17 +214,13 @@ triggerPoints.forEach((d,i) => {
 		else if(d.scope === 'south-Ukraine'){
 			console.log('south ukraine')
 
-			let scale = 10;
-			let x = isMobile ? 0 : 0;
-			let y = isMobile ? 0 : 0;
+			backgrounds.select('.south-ukraine-bg').attr('display','block')
 
-			ukraine.scaleImage(scale, 300, true,{x:x, y:y}, () => {
-
+			let scale = 2;
+			let southUkraineCenterCoordinates = [33.947754, 45.981934]
+			ukraine.zoomToLocation(scale, 600, true, southUkraineCenterCoordinates, () => {
 				backgrounds.select('.ukraine-bg').attr('display','none')
 				backgrounds.select('.kiev-bg').attr('display','none')
-				backgrounds.select('.south-ukraine-bg').attr('display','block')
-
-
 			})
 
 		}
@@ -246,7 +242,6 @@ triggerPoints.forEach((d,i) => {
 
 				backgrounds.select('.ukraine-bg').attr('display','none')
 				backgrounds.select('.south-ukraine-bg').attr('display','none')
-				backgrounds.select('.kiev-bg').attr('display','block')
 
 				kiev.makeLabels(labels, locations)
 
