@@ -5,6 +5,7 @@
 @import "scrolly";
 @import "dcr_enhancer"; // default left column enhancer, works with inline, showcase and immersive weighting
 // @import "full_immersive_enhancer"; // full-width enhancer, to be used with immersive weighting. Removes left colum, sets 100vw atom width at any breakpoint
+// @import "debug"; // for debugging in article page. REMOVE IN PRODUCTION!!
 
 /*----- Vertical scrollbar width used for sizing full viewport width elements -----*/
 root {
