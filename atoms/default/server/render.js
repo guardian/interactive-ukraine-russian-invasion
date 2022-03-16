@@ -4,7 +4,7 @@ import fs from "fs"
 export async function render() {
 
 
-	let files = fs.readdirSync('assets/overlays/');
+	//let files = fs.readdirSync('assets/overlays/');
 
 	const rawData = await request({ "uri": 'https://interactive.guim.co.uk/docsdata/1rCT-QZlo0DNgXXakzyaV8QnB0uQNjoWAfVujgNeA1NY.json', json: true });
 
@@ -30,14 +30,14 @@ export async function render() {
 
 	}
 
-	let overlayImages = [...new Set(data[0].data.map(d => d['image-overlay']))];
+	/*let overlayImages = [...new Set(data[0].data.map(d => d['image-overlay']))];
 
 	let images = '';
 
 	for (let i = 0 ; i < overlayImages.length; i++) {
 
 		images += `<image class="map-overlay img-${overlayImages[i].split(".png")[0]}" xlink:href="<%= path %>/overlays/${overlayImages[i]}"></image>`	
-	}
+	}*/
 
 	return `<div id="scrolly-1">
 	    <div class="scroll-wrapper">

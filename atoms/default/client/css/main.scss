@@ -103,7 +103,7 @@ root {
 
     .key-dot{
         width: 12px; height: 12px;border-radius: 50px;background:black; margin-right: 3px;
-        &.airstrike{background:#1896d7;}
+        &.airstrike{background:#056da1;}
         &.russian-attack{background:#c70000; }
         &.russian-ground{background:#c70000;}
         &.ukranian-ground{background:#f5be2c; }
@@ -213,8 +213,8 @@ root {
 g circle{
     stroke:#FFF; stroke-width:1px;
 }
-.airstrike-shelling-bombing{fill:#1896d7;}
-.russian-ground-movement{fill:#f5be2c;}
+.airstrike-shelling-bombing{fill:#056da1;}
+.russian-ground-movement{fill:#c70000;}
 .attack{fill:#c70000;}
 .border-crossing-point{fill:#ed6300;}
 .ukranian-ground-movement{fill:#f5be2c;}
@@ -237,7 +237,7 @@ p{
         padding: 5px;
         border-radius:20px;
     }
-    .airstrike-shelling-bombing{background:#1896d7;}
+    .airstrike-shelling-bombing{background:#056da1;}
     .russian-ground-movement{background:#f5be2c;}
     .attack{background:#c70000;}
     .border-crossing-point{background:#ed6300;}
