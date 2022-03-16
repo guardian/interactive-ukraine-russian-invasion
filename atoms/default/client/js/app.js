@@ -202,15 +202,22 @@ triggerPoints.forEach((d,i) => {
 			backgrounds.select('.ukraine-bg').attr('display','block')
 			backgrounds.select('.kiev-bg').attr('display','none')
 
+
 			let scale = isMobile ? 1.5 : 1.3;
 			let x = isMobile ? 80 : 180;
 			let y = isMobile ? -100 : -120;
 
-
+			backgrounds.select('.south-ukraine-bg')
+				.transition()
+				.duration(500)
+				.attr('opacity', 0)
 
 			if(currentScale != scale)
 			{
 				ukraine.scaleImage(scale, 300, false, {x:x, y:y}, () => {
+
+					backgrounds.select('.south-ukraine-bg').attr('display','none')
+
 
 					renderUkraine(x,y,d,points)
 				
@@ -230,7 +237,12 @@ triggerPoints.forEach((d,i) => {
 
 			colorKey.style('opacity', 1)
 
-			backgrounds.select('.south-ukraine-bg').attr('display','block')
+			backgrounds.select('.south-ukraine-bg')
+				.attr('display','block')
+				.attr('opacity',0)
+				.transition()
+				.duration(500)
+				.attr('opacity',1)
 
 			let scale = 2;
 			let southUkraineCenterCoordinates = [33.947754, 45.981934]
