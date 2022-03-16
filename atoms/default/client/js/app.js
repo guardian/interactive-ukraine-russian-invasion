@@ -33,9 +33,9 @@ const cities = [
 ]
 
 const locations = [
-{name:'Hostomel airbase', coordinates:[30.2051942,50.5910657], type:'location', offset:[10,4], align:'end'},
-{name:'Presidential Palace', coordinates:[30.5354207,50.4483553], type:'location', offset:[10,4], align:'start'},
-{name:'Boryspil International airport', coordinates:[30.8806328,50.3426539], type:'location', offset:[15,4], align:'start'}
+{name:'Hostomel airbase', coordinates:[30.2051942,50.5910657], type:'location', offset:[10,4], align:'start'},
+{name:'Presidential Palace', coordinates:[30.5354207,50.4483553], type:'location', offset:[0,15], align:'middle'},
+{name:'Boryspil International airport', coordinates:[30.8806328,50.3426539], type:'location', offset:[15,4], align:'end'}
 ]
 
 const areas = [
@@ -45,7 +45,7 @@ const areas = [
 
 const countries = [
 {name:'Ukraine', coordinates:[31.3845243,49.0016335], type:'country', offset:[5,10], align:'center'},
-{name:'Belarus', coordinates:[27.4128463,53.2255732], type:'country', offset:[0,0], align:'center'},
+{name:'Belarus', coordinates:[27.4128463,53.2255732], type:'country', offset:[0,-20], align:'center'},
 {name:'Russia', coordinates:[38.1334343,53.4931992], type:'country', offset:[0,0], align:'center'}
 ]
 
@@ -199,7 +199,7 @@ triggerPoints.forEach((d,i) => {
 			backgrounds.select('.kiev-bg').attr('display','none')
 
 			let scale = isMobile ? 1.5 : 1.3;
-			let x = isMobile ? 70 : 180;
+			let x = isMobile ? 75 : 180;
 			let y = isMobile ? -100 : -120;
 
 
