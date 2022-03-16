@@ -181,36 +181,39 @@ export default class Map {
 		.on('mouseout', e => {if(out)out(e)})
 	}
 
-	makeAnnotation(annotation, text, position, translate = [0,0], wrapOptions = {width:150, align:'left'}){
+	makeAnnotation(annotation, text, position, translate = [0,0], lineLength = 15, wrapOptions = {width:150, align:'left'}){
 
 		annotation
-		.style('left',this.projection(position)[0] + translate[0] + 'px')
-		.style('top',this.projection(position)[1] + translate[1] + 'px')
+		.style('left', translate[0] + 'px')
+		.style('top', translate[1] + 'px')
 
-		annotation.select('text')
+		let group = annotation.select("svg").append('g')
+		group.attr('transform', `translate(${this.projection(position)[0]},${this.projection(position)[1]})`)
+
+		let textElement = group.append('text')
 		.text(text)
 		.call(this.wrap, wrapOptions.width, wrapOptions.align)
 
-		let boundingRect = annotation.select('text').node().getBoundingClientRect();
-		let stroke = annotation.select('path');
+		let boundingRect = textElement.node().getBoundingClientRect();
+		let stroke = group.append('path');
 
 		switch(wrapOptions.align)
 		{
 			case 'top':
-			annotation.select('text').style('transform', `translate(${-boundingRect.width/2}px,${-boundingRect.height}px)`)
-			stroke.attr('d', `M0,0 0,-15`)
+			textElement.style('transform', `translate(${-boundingRect.width/2}px,${-boundingRect.height}px)`)
+			stroke.attr('d', `M0,0 0,-${lineLength}`)
 			break;
 			case 'right':
-			annotation.select('text').style('transform', `translate(18px,0px)`)
-			stroke.attr('d', `M0,0 15,0`)
+			textElement.style('transform', `translate(${lineLength + 3}px,0px)`)
+			stroke.attr('d', `M0,0 ${lineLength},0`)
 			break;
 			case 'bottom':
-			annotation.select('text').style('transform', `translate(${-boundingRect.width/2}px,25px)`)
-			stroke.attr('d', `M0,0 0,15`)
+			textElement.style('transform', `translate(${-boundingRect.width/2}px,${lineLength + 12}px)`)
+			stroke.attr('d', `M0,0 0,${lineLength}`)
 			break;
 			case 'left':
-			annotation.select('text').style('transform', `translate(${-boundingRect.width - 18}px,0px)`)
-			stroke.attr('d', `M0,0 -15,0`)
+			textElement.style('transform', `translate(-${boundingRect.width + lineLength}px,0px)`)
+			stroke.attr('d', `M0,0 -${lineLength},0`)
 			break;
 		}
 	}
@@ -283,7 +286,7 @@ export default class Map {
 
 	wrap(text, width){
 
-		let words = text.text().split(/\s+/).reverse();
+		let words = text.text().split(" ").reverse();
 
 		let word;
 		let line = [];

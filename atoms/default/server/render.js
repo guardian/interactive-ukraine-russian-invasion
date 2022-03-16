@@ -67,10 +67,7 @@ export async function render() {
 	            	</div>
 	            	<div class='annotation-wrapper'>
 	            		<div class='annotation'>
-							<svg>
-								<path d=""/>
-								<text></text>
-							</svg>
+							<svg></svg>
 						</div>
 					</div>
 	            	<svg class="svg-wrapper">
