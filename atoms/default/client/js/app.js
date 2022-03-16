@@ -34,7 +34,7 @@ const cities = [
 
 const locations = [
 {name:'Hostomel airbase', coordinates:[30.2051942,50.5910657], type:'location', offset:[10,4], align:'start'},
-{name:'Presidential Palace', coordinates:[30.5354207,50.4483553], type:'location', offset:[0,15], align:'middle'},
+{name:'Presidential Palace', coordinates:[30.5354207,50.4483553], type:'location', offset:[0,30], align:'middle'},
 {name:'Boryspil International airport', coordinates:[30.8806328,50.3426539], type:'location', offset:[15,4], align:'end'}
 ]
 
