@@ -157,8 +157,14 @@ export default class Map {
 			}
 			else if(o.type === 'location'){
 
+				let line = ''
+
+				if(o.align == 'start')line = `M${posX},${posY} ${posX + o.offset[0]-2},${posY}`
+				else if(o.align == 'end')line = `M${posX},${posY} ${posX - o.offset[0]+2},${posY}`
+				else if(o.align == 'middle')line = `M${posX},${posY} ${posX},${posY - o.offset[1]+2}`
+
 				node.append('path')
-				.attr('d', `M${posX},${posY} ${o.align == 'start' ? posX + o.offset[0]-2 : posX - o.offset[0]+2},${posY}`)
+				.attr('d', line)
 				.attr('class', 'location-stroke')
 			}
 
