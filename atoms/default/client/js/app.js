@@ -25,11 +25,11 @@ import data from "assets/json/data.json"
 
 const cities = [
 {name:'Moscow', coordinates:[37.6216393,55.753705], type:'capital', offset:[10,7], align:'start'},
-{name:'Kyiv', coordinates:[30.523399,50.450100], type:'capital', offset:[10,20], align:'center'},
+{name:'Kyiv', coordinates:[30.523399,50.450100], type:'capital', offset:[0,20], align:'middle'},
 {name:'Kharkiv', coordinates:[36.25904386,49.99533397], type:'city', offset:[10,7], align:'end'},
-{name:'Lviv', coordinates:[24.0066233,49.836511], type:'city', offset:[10,7], align:'start'},
-{name:'Mariupol', coordinates:[37.549444,47.095833], type:'city', offset:[10,7], align:'end'},
-{name:'Kherson', coordinates:[32.5943554,46.6555112], type:'city', offset:[10,7], align:'start'}
+{name:'Lviv', coordinates:[24.0066233,49.836511], type:'city', offset:[5,3], align:'start'},
+{name:'Mariupol', coordinates:[37.549444,47.095833], type:'city', offset:[0,15], align:'start'},
+{name:'Kherson', coordinates:[32.5943554,46.6555112], type:'city', offset:[5,3], align:'end'}
 ]
 
 const locations = [
@@ -40,11 +40,11 @@ const locations = [
 
 const areas = [
 {name:'Crimea', coordinates:[34.4975073,45.345141], type:'area', offset:[0,0], align:'middle'},
-{name:'Separatist-controlled area', coordinates:[38.9081713,48.11942], type:'area', offset:[0,0], align:'middle'}
+{name:'Separatist- controlled area', coordinates:[38.9081713,48.11942], type:'area', offset:[20,-25], align:'middle'}
 ]
 
 const countries = [
-{name:'Ukraine', coordinates:[31.3845243,49.0016335], type:'country', offset:[0,0], align:'center'},
+{name:'Ukraine', coordinates:[31.3845243,49.0016335], type:'country', offset:[5,10], align:'center'},
 {name:'Belarus', coordinates:[27.4128463,53.2255732], type:'country', offset:[0,0], align:'center'},
 {name:'Russia', coordinates:[38.1334343,53.4931992], type:'country', offset:[0,0], align:'center'}
 ]
@@ -54,8 +54,6 @@ const geographies = [
 ]
 
 const isMobile = window.matchMedia('(max-width: 800px)').matches;
-
-console.log('isMobile', isMobile)
 
 const atomEl = d3.select('#scrolly-1').node();
 
@@ -139,9 +137,6 @@ triggerPoints.forEach((d,i) => {
 
 		let points = mapPoints.filter(f => f['scrolly-stage'] === String(i+1));
 		let caption = points.find(f => f['caption-on-viz'] === 'Y');
-		//let overlay = overlays.select('.img-' + d['image-overlay'].split('.png')[0]);
-
-		
 
 		if(d.scope === 'wider-Ukraine'){
 			console.log('wider ukraine')
@@ -153,8 +148,10 @@ triggerPoints.forEach((d,i) => {
 
 			ukraine.scaleImage(scale, 300,  false,{x:x, y:y}, () => {
 
+				console.log(labels)
+
 				ukraine.makeLabels(labels, countries, [x,y])
-				ukraine.makeLabels(labels, cities, [x,y])
+				ukraine.makeLabels(labels, cities.filter(f => f.type === 'capital'), [x,y])
 				ukraine.makeLabels(labels, areas, [x,y])
 
 				ukraine.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
@@ -202,7 +199,7 @@ triggerPoints.forEach((d,i) => {
 			backgrounds.select('.kiev-bg').attr('display','none')
 
 			let scale = isMobile ? 1.5 : 1.3;
-			let x = isMobile ? 80 : 180;
+			let x = isMobile ? 70 : 180;
 			let y = isMobile ? -100 : -120;
 
 
@@ -242,7 +239,6 @@ triggerPoints.forEach((d,i) => {
 				southUkraine.makeLabels(labels, areas)
 
 				southUkraine.makePoints(dots, points, isMobile ? 4 : 5, [0,0], manageMove, manageOver, manageOut)
-
 
 				southUkraine.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])))
 
@@ -312,8 +308,6 @@ window.onscroll = (e) => {
 
 const manageMove = (event) => {
 
-	console.log(event)
-
 	tooltip.classed('over', true)
 
 	let left = event.layerX  /*- atomEl.getBoundingClientRect().left*/;
@@ -323,7 +317,11 @@ const manageMove = (event) => {
 	let tHeight = tooltip.node().getBoundingClientRect().height;
 
 	let posX = left - (tWidth / 2);
-	let posY = top + 15;
+	let posY = top ;
+
+
+	if(posX < 0 || isMobile && posX +  tWidth > width) posX = 0;
+
 
 	tooltip.style('left',  posX + 'px')
 	tooltip.style('top', posY + 'px')
@@ -332,7 +330,7 @@ const manageMove = (event) => {
 
 const manageOver = (event, el) => {
 
-	tooltip.select('.tooltip-date').html(el.date)
+	tooltip.select('time').html(el.date)
 	tooltip.select('.tooltip-location').html(el.location)
 	tooltip.select('.tooltip-caption').html(el.caption)
 

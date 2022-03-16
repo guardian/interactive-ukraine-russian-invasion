@@ -264,7 +264,7 @@ export default class Map {
 			let words = txt.text().split(/\s+/);
 
 			let lineNumber = 0;
-		        let lineHeight = 1.4; // ems
+		        let lineHeight = 1; // ems
 
 		        txt.text(null);
 
