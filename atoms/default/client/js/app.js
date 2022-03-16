@@ -130,6 +130,7 @@ triggerPoints.forEach((d,i) => {
 	scrolly.addTrigger({num: i+1, do: () => {
 
 		annotation.style('display', 'none')
+		annotation.select('svg').selectChildren().remove()
 		tooltip.classed('over', false)
 		arrows.selectAll('path').remove()
 		dots.selectAll('circle').remove()
