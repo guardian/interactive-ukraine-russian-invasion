@@ -202,7 +202,9 @@ export default class Map {
 		let group = annotation.select("svg").append('g')
 		group.attr('transform', `translate(${this.projection(position)[0]},${this.projection(position)[1]})`)
 
-		let textElement = group.append('text')
+		let textGroup = group.append('g')
+
+		let textElement = textGroup.append('text')
 		.text(text)
 		.call(this.wrap, wrapOptions.width, wrapOptions.align)
 
@@ -212,19 +214,19 @@ export default class Map {
 		switch(wrapOptions.align)
 		{
 			case 'top':
-			textElement.style('transform', `translate(${-boundingRect.width/2}px,${-boundingRect.height}px)`)
+			textGroup.style('transform', `translate(${-boundingRect.width/2}px,${-boundingRect.height}px)`)
 			stroke.attr('d', `M0,0 0,-${lineLength}`)
 			break;
 			case 'right':
-			textElement.style('transform', `translate(${lineLength + 3}px,0px)`)
+			textGroup.style('transform', `translate(${lineLength + 3}px,0px)`)
 			stroke.attr('d', `M0,0 ${lineLength},0`)
 			break;
 			case 'bottom':
-			textElement.style('transform', `translate(${-boundingRect.width/2}px,${lineLength + 12}px)`)
+			textGroup.style('transform', `translate(${-boundingRect.width/2}px,${lineLength + 12}px)`)
 			stroke.attr('d', `M0,0 0,${lineLength}`)
 			break;
 			case 'left':
-			textElement.style('transform', `translate(-${boundingRect.width + lineLength}px,0px)`)
+			textGroup.style('transform', `translate(-${boundingRect.width + lineLength}px,0px)`)
 			stroke.attr('d', `M0,0 -${lineLength},0`)
 			break;
 		}
