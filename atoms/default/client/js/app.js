@@ -317,7 +317,7 @@ const manageMove = (event) => {
 	let tHeight = tooltip.node().getBoundingClientRect().height;
 
 	let posX = left - (tWidth / 2);
-	let posY = top ;
+	let posY = top + 15;
 
 
 	if(posX < 0 || isMobile && posX +  tWidth > width) posX = 0;
