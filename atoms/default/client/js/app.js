@@ -63,7 +63,7 @@ const ratio = width * 100 / 1260;
 
 let ukraineBgImage = isMobile ? 'ukraine-v' : 'ukraine-h';
 let southUkraineBgImage = isMobile ? 'south-ukraine-v' : 'south-ukraine-h';
-let kievBgImage = isMobile ? 'kiev-v' : 'kiev-h';
+let kievBgImage = isMobile ? 'kiev-v-900913' : 'kiev-h-900913';
 
 let ukraineObj = isMobile ? geo.objects['ukraine-v'] : geo.objects['ukraine-h'];
 
@@ -251,7 +251,7 @@ triggerPoints.forEach((d,i) => {
 				southUkraine.makeLabels(labels, cities)
 				southUkraine.makeLabels(labels, areas)
 
-				southUkraine.makePoints(dots, points, isMobile ? 4 : 5, [0,0], manageMove, manageOver, manageOut)
+				southUkraine.makePoints(dots, points, 5, [0,0], manageMove, manageOver, manageOut)
 
 				southUkraine.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])))
 
@@ -289,7 +289,7 @@ triggerPoints.forEach((d,i) => {
 
 				kiev.makeLabels(labels, locations)
 
-				kiev.makePoints(dots, points, isMobile ? 4 : 5, [0,0], manageMove, manageOver, manageOut)
+				kiev.makePoints(dots, points,  5, isMobile ? [20,0] : [30,20], manageMove, manageOver, manageOut)
 
 				kiev.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
 
@@ -359,7 +359,7 @@ const renderUkraine = (x,y,d,points) => {
 
 	ukraine.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
 
-	ukraine.makePoints(dots, points, isMobile ? 4 : 5, [x,y], manageMove, manageOver, manageOut)	
+	ukraine.makePoints(dots, points, 5, [x,y], manageMove, manageOver, manageOut)	
 
 	if(d['arrow-overlay'])
 	{
