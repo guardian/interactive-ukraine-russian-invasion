@@ -245,31 +245,72 @@ p{
     .russian-capture{background:#ed6300;}
 }
 
+.tooltip-wrapper{
+    position: relative;
+    .tooltip-map-list{
+        pointer-events: none;
+        min-width:150px;
+        //max-width: 300px;
+        height: max-content;
+        padding:8px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #333;
+        color: #333333;
+        border-top: 1px solid #333;
+        position: absolute;
+        z-index: 100000;
+        line-height: 18.2px;
+        cursor: pointer;
 
-.tooltip-map-list{
-    pointer-events: none;
-    min-width:150px;
-    max-width: 300px;
-    height: max-content;
-    padding:8px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid #333;
-    color: #333333;
-    border-top: 1px solid #333;
-    position: absolute;
-    z-index: 100000;
-    line-height: 18.2px;
-    cursor: pointer;
+        opacity:0;
 
-    opacity:0;
+        &.over{
+            opacity: 1;
+        }
 
-    &.over{
-        opacity: 1;
+        font-size: 14px;
+
+        h2{
+            margin:0;
+            padding-top: 3px;
+            @include fs-header(5); margin-bottom: 8px;
+            width: 100%;
+            margin-left: 0;
+            background-color: #ffffff !important;
+            border-top: 1px solid #333;
+            margin-bottom: 1rem;
+            font-family: GuardianTextEgyptian,Guardian Text Egyptian Web,Georgia,serif;
+            font-size: 18px;
+            line-height: 21px;
+            background-color: #333333;
+        }
+
+
+        max-width: 330px;
+
+         @include mq($from: 100px, $until: 499px) {
+            width: 100%;
+        } 
+
+        text-align: left;
+        margin-left: 0px;
+        padding: 6px 10px 0px;
+        padding-top: 6px;
+        padding-bottom: 0px;
+        font-size: 28px;
+        line-height: 32px;
+        font-family: "Guardian Headline","Guardian Egyptian Web","Guardian Headline Full",Georgia,serif;
+        font-weight: normal;
+        color: #000;
+        font-size: 16px;
+        line-height: 22px;
+
+        padding-top: 4px;
+        padding-bottom: 6px;
+
+        box-shadow: 3px 3px 3px #bababa;
+        border:none !important;
     }
-
-    font-size: 14px;
-
-    @include fs-header(3);
 }
 
 .annotation-wrapper{
@@ -347,24 +388,7 @@ p{
 
 .scroll-text__div {
 
-    hr{
-        border: .7px solid #333;
-        background:#333;
-        margin-left: 0;
-        padding: 0;
-        margin: 0;
-        -webkit-transition: width 1s ease-in-out;
-        -moz-transition: width 1s ease-in-out;
-        -o-transition: width 1s ease-in-out;
-        transition: width 1s ease-in-out;
-        
-    }
 
-    
-    .hr1{width:0%;}
-    .hr2{width:25%;}
-    .hr3{width:50%;}
-    .hr4{width:75%;}
 
     h2{
         margin:0;
@@ -408,7 +432,7 @@ p{
     box-sizing: border-box;
     -webkit-transform: translate3d(0, 0, 0);
 
-    box-shadow:none !important;
+    box-shadow: 3px 3px 3px #bababa;
     border:none !important;
 
 }
