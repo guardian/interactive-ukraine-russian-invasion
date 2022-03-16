@@ -137,7 +137,6 @@ export default class Map {
 			.text(o.name)
 			.call(this.wrapLabel, o.align == 'start' ? o.offset[0] + 'px' : -o.offset[0] + 'px', o.offset[1])
 			//.call(this.wrapLabel, 50, o.align)
-			
 
 			if(o.type === 'capital'){
 
@@ -157,9 +156,22 @@ export default class Map {
 			}
 			else if(o.type === 'location'){
 
+				let line = ''
+
+				if(o.align == 'start')line = `M${posX},${posY} ${posX + o.offset[0]-2},${posY}`
+				else if(o.align == 'end')line = `M${posX},${posY} ${posX - o.offset[0]+2},${posY}`
+				else if(o.align == 'middle')line = `M${posX},${posY} ${posX},${posY + o.offset[1] - 12}`
+
 				node.append('path')
-				.attr('d', `M${posX},${posY} ${o.align == 'start' ? posX + o.offset[0]-2 : posX - o.offset[0]+2},${posY}`)
+				.attr('d', line)
 				.attr('class', 'location-stroke')
+
+				node.append('circle')
+				.attr('r', '2px')
+				.attr('cx', posX + translate[0] + 'px')
+				.attr('cy', posY + translate[1] + 'px')
+				.attr('class', 'location-dot')
+				.attr('fill', '#000')
 			}
 
 		})
