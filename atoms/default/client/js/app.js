@@ -128,6 +128,7 @@ triggerPoints.forEach((d,i) => {
 	scrolly.addTrigger({num: i+1, do: () => {
 
 		annotation.style('display', 'none')
+		annotation.select('svg').selectChildren().remove()
 		tooltip.classed('over', false)
 		arrows.selectAll('path').remove()
 		dots.selectAll('circle').remove()
@@ -180,10 +181,10 @@ triggerPoints.forEach((d,i) => {
 				ukraine.makeAnnotation(annotation, "Russian military deployment", [39.168586356, 51.51019768], [0, 0], 15, {width:100, align:'right'})
 
 				let lineLength = isMobile ? 30 : 60;
-				ukraine.makeAnnotation(annotation, "Estimated 5000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:70, align:'bottom'})
+				ukraine.makeAnnotation(annotation, "Estimated 5,000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:75, align:'bottom'})
 
 				lineLength = isMobile ? 20 : 40;
-				ukraine.makeAnnotation(annotation, "Estimated 1200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:70, align:'left'})
+				ukraine.makeAnnotation(annotation, "Estimated 1,200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:75, align:'left'})
 
 			})
 
@@ -198,15 +199,22 @@ triggerPoints.forEach((d,i) => {
 			backgrounds.select('.ukraine-bg').attr('display','block')
 			backgrounds.select('.kiev-bg').attr('display','none')
 
+
 			let scale = isMobile ? 1.5 : 1.3;
 			let x = isMobile ? 75 : 180;
 			let y = isMobile ? -100 : -120;
 
-
+			backgrounds.select('.south-ukraine-bg')
+				.transition()
+				.duration(500)
+				.attr('opacity', 0)
 
 			if(currentScale != scale)
 			{
 				ukraine.scaleImage(scale, 300, false, {x:x, y:y}, () => {
+
+					backgrounds.select('.south-ukraine-bg').attr('display','none')
+
 
 					renderUkraine(x,y,d,points)
 				
@@ -226,7 +234,12 @@ triggerPoints.forEach((d,i) => {
 
 			colorKey.style('opacity', 1)
 
-			backgrounds.select('.south-ukraine-bg').attr('display','block')
+			backgrounds.select('.south-ukraine-bg')
+				.attr('display','block')
+				.attr('opacity',0)
+				.transition()
+				.duration(500)
+				.attr('opacity',1)
 
 			let scale = 2;
 			let southUkraineCenterCoordinates = [33.947754, 45.981934]
