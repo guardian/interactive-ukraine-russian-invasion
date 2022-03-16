@@ -184,10 +184,10 @@ triggerPoints.forEach((d,i) => {
 				ukraine.makeAnnotation(annotation, "Russian military deployment", [39.168586356, 51.51019768], [0, 0], 15, {width:100, align:'right'})
 
 				let lineLength = isMobile ? 30 : 60;
-				ukraine.makeAnnotation(annotation, "Estimated 5000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:70, align:'bottom'})
+				ukraine.makeAnnotation(annotation, "Estimated 5,000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:75, align:'bottom'})
 
 				lineLength = isMobile ? 20 : 40;
-				ukraine.makeAnnotation(annotation, "Estimated 1200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:70, align:'left'})
+				ukraine.makeAnnotation(annotation, "Estimated 1,200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:75, align:'left'})
 
 			})
 
