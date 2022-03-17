@@ -187,6 +187,8 @@ triggerPoints.forEach((d,i) => {
 									[{name:'Crimea', coordinates:[34.4975073,45.345141], type:'area', offset:[0,0], align:'middle'},
 									{name:'Separatist- controlled area', coordinates:[38.9081713,48.11942], type:'area', offset:[20,-25], align:'middle'}]
 
+									console.log(areasMob)
+
 		overlays
 	    .interrupt()
 	    .transition();
@@ -245,14 +247,14 @@ triggerPoints.forEach((d,i) => {
 
 					backgrounds.select('.south-ukraine-bg').attr('display','none')
 
-					renderUkraine(x,y,d,points)
+					renderUkraine(x,y,d,points, areasMob)
 				})
 
 				currentScale = scale
 			}
 			else
 			{
-				renderUkraine(x,y,d,points)
+				renderUkraine(x,y,d,points, areasMob)
 			}
 
 			
@@ -396,7 +398,7 @@ const manageOut = (event) => {
 
 const renderUkraine = (x,y,d,points, areas) => {
 
-	console.log(areas)
+	console.log('rendedrUkrraine', areas)
 
 	ukraine.makeLabels(labels, cities, [x,y])
 	ukraine.makeLabels(labels, areas, [x,y])
