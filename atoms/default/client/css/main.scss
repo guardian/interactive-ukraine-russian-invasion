@@ -165,11 +165,22 @@ root {
   font-weight: regular;
   font-size: 12px;
   fill:#333;
+  pointer-events:none;
 }
+
+.stroke-text{
+    stroke: #fff;
+    stroke-width: 2px;
+    pointer-events:none;
+}
+
+
+
 
 .city-dot{
     fill:#333;
     stroke:none;
+    pointer-events:none;
 }
 .location-stroke{stroke:#333;}
 
@@ -178,11 +189,13 @@ root {
     font-weight: bold;
     font-size: 13px;
     fill:#333;
+    pointer-events:none;
 }
 
 .capital-dot{
     fill:#333;
     stroke:none;
+    pointer-events:none;
 
 }
 
@@ -308,7 +321,7 @@ p{
         padding-top: 4px;
         padding-bottom: 6px;
 
-        box-shadow: 3px 3px 3px #bababa;
+        //box-shadow: 3px 3px 3px #bababa;
         border:none !important;
     }
 }
@@ -436,3 +449,5 @@ p{
     border:none !important;
 
 }
+
+

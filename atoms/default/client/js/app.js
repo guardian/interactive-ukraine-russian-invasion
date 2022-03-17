@@ -4,10 +4,11 @@ import Map from 'shared/js/Map'
 import geo from 'assets/json/extents.json'
 import prewar from 'assets/pre-invasion-deployments.json'
 import troopNumbers from 'assets/troop-numbers.json'
-import arrowsGeo from 'assets/json/arrows.json'
-import overlaysGeo from 'assets/json/areas.json'
+import arrowsGeo from 'assets/json/arrows-15mar.json'
+import overlaysGeo from 'assets/json/areas-16m.json'
 import ScrollyTeller from "shared/js/scrollyteller"
 import data from "assets/json/data.json"
+import water from "assets/json/kiyiv-water.json"
 
 const isMobile = window.matchMedia('(max-width: 800px)').matches;
 
@@ -63,7 +64,11 @@ const atomEl = d3.select('#scrolly-1').node();
 
 const width = atomEl.getBoundingClientRect().width;
 const height = isMobile ? 667.92 * width / 597.12 : 426 * width / 714.96;
+const heightKiev = isMobile ? 480 * width / 429.12 : 431.04 * width / 714.96;
+const heightSouthUkraine = isMobile ? 480 * width / 429.12 : 395.04 * width / 714.96;
 const ratio = width * 100 / 1260;
+
+if(isMobile)d3.select('.scroll-text').style('top', height + 'px')
 
 let ukraineBgImage = isMobile ? 'ukraine-v' : 'ukraine-h';
 let southUkraineBgImage = isMobile ? 'south-ukraine-v' : 'south-ukraine-h';
@@ -89,9 +94,10 @@ const svg = d3.select('.svg-wrapper')
 const overlays = svg.select('.overlays');
 const areasControl = overlays.append('g')
 const arrows = overlays.append('g')
-const labels = overlays.append('g')
+
 const dots = overlays.append('g')
 const bubbles = overlays.append('g')
+const labels = overlays.append('g')
 const defs = d3.select('defs')
 
 defs.append('mask')
@@ -100,11 +106,31 @@ defs.append('mask')
 
 const backgrounds = svg.select('.backgrounds')
 
-const kiev = new Map(width, height, geo, kievObj, 1)
-const kievBg = kiev.makeBackground(backgrounds, `<%= path %>/jpg/${kievBgImage}.jpg`, 'kiev-bg', overlays)
+const kievExtentDessktop = {
+				        type: "LineString",
+
+				         coordinates: [
+				            [29.7872132485128382, 50.1234704371395523],
+				            [31.2065873300330452, 50.1234704371395523],
+				            [31.2065873300330452, 50.6699457973042513],
+				            [29.7872132485128382, 50.6699457973042513],
+				        ]}
+
+const kievExtentMobile = {
+				        type: "LineString",
+
+				         coordinates: [
+				            [30.0783135071483692, 50.0966350615756042],
+				            [30.9299379560604955, 50.0966350615756042],
+				            [30.9299379560604955, 50.7040745278488316],
+				            [30.0783135071483692, 50.7040745278488316],
+				        ]}
+
+const kiev = new Map(width, heightKiev , geo, kievObj, 1)
+const kievBg = kiev.makeBackground(backgrounds, `<%= path %>/jpg/${kievBgImage}.jpg`, 'kiev-bg', overlays, isMobile ? kievExtentMobile : kievExtentDessktop)
 svg.select('.kiev-bg').attr('display', 'none')
 
-const southUkraine = new Map(width, height, geo, southUkraineObj, 1)
+const southUkraine = new Map(width, heightSouthUkraine, geo, southUkraineObj, 1)
 const southUkrainekieBg = southUkraine.makeBackground(backgrounds, `<%= path %>/jpg/${southUkraineBgImage}.jpg`, 'south-ukraine-bg', overlays)
 svg.select('.south-ukraine-bg').attr('display', 'none')
 
@@ -287,7 +313,7 @@ triggerPoints.forEach((d,i) => {
 				.attr('opacity',1)
 
 			let scale = 2;
-			let southUkraineCenterCoordinates = [33.947754, 45.981934]
+			let southUkraineCenterCoordinates = [33.947754, 44.981934]
 
 			ukraine.zoomToLocation(scale, 600, true, southUkraineCenterCoordinates, () => {
 				backgrounds.select('.ukraine-bg').attr('display','none')
@@ -302,7 +328,7 @@ triggerPoints.forEach((d,i) => {
 
 				if(d['arrow-overlay'])
 				{
-					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects['arrows-14mar']).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
+					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
 
 					southUkraine.makeArrows(arrows, feature, "url(#arrow-head-russia)", [0,0], 'russian-move')
 				}
@@ -334,13 +360,14 @@ triggerPoints.forEach((d,i) => {
 
 				kiev.makeLabels(labels, locations)
 
-				kiev.makePoints(dots, points,  5, isMobile ? [20,0] : [30,20], manageMove, manageOver, manageOut)
+				//kiev.makePoints(dots, points,  5, isMobile ? [20,0] : [30,20], manageMove, manageOver, manageOut)
+				kiev.makePoints(dots, points,  5, [0,0], manageMove, manageOver, manageOut)
 
 				kiev.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
 
 				if(d['arrow-overlay'])
 				{
-					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects['arrows-14mar']).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
+					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
 
 					kiev.makeArrows(arrows, feature, "url(#arrow-head-russia)", [x,y], 'russian-move')
 				}	
@@ -365,6 +392,16 @@ window.onscroll = (e) => {
 
 const manageMove = (event) => {
 
+	
+
+}
+
+const manageOver = (event, el) => {
+
+	tooltip.select('time').html(el.date)
+	tooltip.select('.tooltip-location').html(el.location)
+	tooltip.select('.tooltip-caption').html(el.caption)
+
 	tooltip.classed('over', true)
 
 	let left = event.layerX  /*- atomEl.getBoundingClientRect().left*/;
@@ -376,20 +413,11 @@ const manageMove = (event) => {
 	let posX = left - (tWidth / 2);
 	let posY = top + 15;
 
-
 	if(posX < 0 || isMobile && posX +  tWidth > width) posX = 0;
-
+	if(posY + tHeight > height) isMobile ? posY = 0 : posY = height - tHeight;
 
 	tooltip.style('left',  posX + 'px')
 	tooltip.style('top', posY + 'px')
-
-}
-
-const manageOver = (event, el) => {
-
-	tooltip.select('time').html(el.date)
-	tooltip.select('.tooltip-location').html(el.location)
-	tooltip.select('.tooltip-caption').html(el.caption)
 
 }
 
@@ -407,7 +435,7 @@ const renderUkraine = (x,y,d,points) => {
 
 	if(d['arrow-overlay'])
 	{
-		let feature = topojson.feature(arrowsGeo,arrowsGeo.objects['arrows-14mar']).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
+		let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
 
 		ukraine.makeArrows(arrows, feature, "url(#arrow-head-russia)", [x,y], 'russian-move')
 	}	
