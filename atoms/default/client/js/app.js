@@ -4,8 +4,8 @@ import Map from 'shared/js/Map'
 import geo from 'assets/json/extents.json'
 import prewar from 'assets/pre-invasion-deployments.json'
 import troopNumbers from 'assets/troop-numbers.json'
-import arrowsGeo from 'assets/json/arrows.json'
-import overlaysGeo from 'assets/json/areas.json'
+import arrowsGeo from 'assets/json/arrows-15mar.json'
+import overlaysGeo from 'assets/json/areas-16m.json'
 import ScrollyTeller from "shared/js/scrollyteller"
 import data from "assets/json/data.json"
 import water from "assets/json/kiyiv-water.json"
@@ -270,7 +270,7 @@ triggerPoints.forEach((d,i) => {
 
 				if(d['arrow-overlay'])
 				{
-					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects['arrows-14mar']).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
+					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
 
 					southUkraine.makeArrows(arrows, feature, "url(#arrow-head-russia)", [0,0], 'russian-move')
 				}
@@ -309,7 +309,7 @@ triggerPoints.forEach((d,i) => {
 
 				if(d['arrow-overlay'])
 				{
-					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects['arrows-14mar']).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
+					let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
 
 					kiev.makeArrows(arrows, feature, "url(#arrow-head-russia)", [x,y], 'russian-move')
 				}	
@@ -356,10 +356,8 @@ const manageOver = (event, el) => {
 	let posX = left - (tWidth / 2);
 	let posY = top + 15;
 
-
 	if(posX < 0 || isMobile && posX +  tWidth > width) posX = 0;
-	if(posY + tHeight > height) posY = 0;
-
+	if(posY + tHeight > height) isMobile ? posY = 0 : posY = height - tHeight;
 
 	tooltip.style('left',  posX + 'px')
 	tooltip.style('top', posY + 'px')
@@ -380,7 +378,7 @@ const renderUkraine = (x,y,d,points) => {
 
 	if(d['arrow-overlay'])
 	{
-		let feature = topojson.feature(arrowsGeo,arrowsGeo.objects['arrows-14mar']).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
+		let feature = topojson.feature(arrowsGeo,arrowsGeo.objects.arrows).features.filter(f => f.properties.layer === d['arrow-overlay'] && f.properties.color24 === 45823);
 
 		ukraine.makeArrows(arrows, feature, "url(#arrow-head-russia)", [x,y], 'russian-move')
 	}	
