@@ -110,6 +110,46 @@ const ukraineBg = ukraine.makeBackground(backgrounds, `<%= path %>/jpg/${ukraine
 ukraine.makeLabels(labels, cities)
 ukraine.makeLabels(labels, areas)
 
+dots.selectAll('circle')
+	.data(prewar)
+	.join('circle')
+	.attr('class', 'buildup')
+	.attr('r', 5)
+	.attr('cx', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
+	.attr('cy', d =>ukraine.getPoints([d.Longitude, d.Latitude])[1])
+
+bubbles.selectAll('circle')
+	.data(troopNumbers)
+	.join('circle')
+	.attr('class', 'bubble')
+	.attr('r', d => {
+		let scaleFactor = isMobile ? 0.5 : 1;
+		return Math.sqrt(d.Value / Math.PI) * scaleFactor
+	})
+	.attr('cx', d => ukraine.getPoints([d.Longitude, d.Latitude])[0])
+	.attr('cy', d => ukraine.getPoints([d.Longitude, d.Latitude])[1])
+
+
+annotation.style('display', 'block')
+ukraine.makeAnnotation(annotation, "Russian military deployment", [39.168586356, 51.51019768], [0, 0], 15, {width:100, align:'right'})
+
+let lineLength = isMobile ? 30 : 60;
+ukraine.makeAnnotation(annotation, "Estimated 5,000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:75, align:'bottom'})
+
+lineLength = isMobile ? 20 : 40;
+ukraine.makeAnnotation(annotation, "Estimated 1,200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:75, align:'left'})
+
+let x= 0, y = 0
+
+ukraine.makeLabels(labels, countries, [x,y])
+ukraine.makeLabels(labels, cities.filter(f => f.type === 'capital'), [x,y])
+ukraine.makeLabels(labels, areas, [x,y])
+
+const triggerPoints = data[0].data;
+
+let imageOverlayName = triggerPoints[0]['image-overlay']
+ukraine.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === imageOverlayName)), [x,y])
+
 
 const scrolly = new ScrollyTeller({
 	parent: document.querySelector("#scrolly-1"),
@@ -118,23 +158,27 @@ const scrolly = new ScrollyTeller({
     transparentUntilActive: false
 });
 
-const triggerPoints = data[0].data;
 const mapPoints = data[1].data;
 
 let currentScale = 1;
+let firstTrigger = true
 
 triggerPoints.forEach((d,i) => {
 
 	scrolly.addTrigger({num: i+1, do: () => {
 
-		annotation.style('display', 'none')
-		annotation.select('svg').selectChildren().remove()
-		tooltip.classed('over', false)
-		arrows.selectAll('path').remove()
-		dots.selectAll('circle').remove()
-		bubbles.selectAll('circle').remove()
-		labels.selectAll('*').remove()
-		overlays.selectAll('path').remove()
+		if (!firstTrigger) {
+			annotation.style('display', 'none')
+			annotation.select('svg').selectChildren().remove()
+			tooltip.classed('over', false)
+			arrows.selectAll('path').remove()
+			dots.selectAll('circle').remove()
+			bubbles.selectAll('circle').remove()
+			labels.selectAll('*').remove()
+			overlays.selectAll('path').remove()
+		} else {
+			firstTrigger = false
+		}
 
 		let points = mapPoints.filter(f => f['scrolly-stage'] === String(i+1));
 		let caption = points.find(f => f['caption-on-viz'] === 'Y');
@@ -148,8 +192,6 @@ triggerPoints.forEach((d,i) => {
 			colorKey.style('opacity', 0)
 
 			ukraine.scaleImage(scale, 300,  false,{x:x, y:y}, () => {
-
-				console.log(labels)
 
 				ukraine.makeLabels(labels, countries, [x,y])
 				ukraine.makeLabels(labels, cities.filter(f => f.type === 'capital'), [x,y])
