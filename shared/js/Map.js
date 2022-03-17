@@ -23,7 +23,7 @@ export default class Map {
 		this.rtranslate_y;
 	}
 
-	makeBackground(node, image, className, overlays = null) {
+	makeBackground(node, image, className, overlays = null, extent) {
 
 		//based on https://datawanderings.com/2020/08/08/raster-backgrounds/   
 
@@ -37,9 +37,19 @@ export default class Map {
 		this.t = [(this.width - this.s * (this.b[1][0] + this.b[0][0])) / 2, (this.height - this.s * (this.b[1][1] + this.b[0][1])) / 2];
 
 		// update projection
-		this.projection
-		.scale(this.s)
-		.translate(this.t)
+
+		if(!extent)
+		{
+			this.projection
+			.scale(this.s)
+			.translate(this.t)
+		}
+		else
+		{
+			this.projection
+			.fitExtent([[0, 0], [this.width, this.height]], extent);
+		}
+
 
 		// scale and postion
 		this.raster_width = (this.b[1][0] - this.b[0][0]) * this.s;
@@ -129,6 +139,13 @@ export default class Map {
 
 			let posX = this.projection(o.coordinates)[0]
 			let posY = this.projection(o.coordinates)[1]
+
+			let textW = node.append('text')
+			.attr('transform', `translate(${posX + translate[0]},${posY + translate[1]})`)
+			.attr('class', o.type + ' stroke-text' )
+			.attr('text-anchor', o.align)
+			.text(o.name)
+			.call(this.wrapLabel, o.align == 'start' ? o.offset[0] + 'px' : -o.offset[0] + 'px', o.offset[1])
 
 			let text = node.append('text')
 			.attr('transform', `translate(${posX + translate[0]},${posY + translate[1]})`)
@@ -269,6 +286,7 @@ export default class Map {
 	}
 
 	wrapLabel(text, x, y){
+
 		text.each( function(){
 
 			let txt = d3.select(this);
@@ -281,7 +299,7 @@ export default class Map {
 		        txt.text(null);
 
 		        words.forEach(word => {
-		        	
+
 		        	txt.append("tspan")
 		        	.attr("x", x)
 		        	.attr("y", y)
