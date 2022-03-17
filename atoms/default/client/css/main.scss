@@ -395,8 +395,15 @@ p{
     fill: #00b2ff;
 }
 
-.scroll-text{
-    top: 48px;
+.scroll-text__inner{
+
+    @include mq(mobile) {
+         margin-bottom: 70vh;
+    }
+    @include mq(desktop) {
+         margin-bottom: 0;
+    }
+    
 }
 
 .scroll-text__div {

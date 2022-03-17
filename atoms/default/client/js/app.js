@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import * as topojson from 'topojson'
 import Map from 'shared/js/Map'
-import geo from 'assets/json/extents.json'
+import geo from 'assets/json/extents-new.json'
 import prewar from 'assets/pre-invasion-deployments.json'
 import troopNumbers from 'assets/troop-numbers.json'
 import arrowsGeo from 'assets/json/arrows-15mar.json'
@@ -64,10 +64,8 @@ const heightKiev = isMobile ? 480 * width / 429.12 : 431.04 * width / 714.96;
 const heightSouthUkraine = isMobile ? 480 * width / 429.12 : 395.04 * width / 714.96;
 const ratio = width * 100 / 1260;
 
-if(isMobile)d3.select('.scroll-text').style('top', height + 'px')
-
-let ukraineBgImage = isMobile ? 'ukraine-v' : 'ukraine-h';
-let southUkraineBgImage = isMobile ? 'south-ukraine-v' : 'south-ukraine-h';
+let ukraineBgImage = isMobile ? 'ukraine-v-new' : 'ukraine-h-new';
+let southUkraineBgImage = isMobile ? 'south-ukraine-v-new' : 'south-ukraine-h-new';
 let kievBgImage = isMobile ? 'kiev-v' : 'kiev-h';
 
 let ukraineObj = isMobile ? geo.objects['ukraine-v'] : geo.objects['ukraine-h'];
@@ -144,6 +142,17 @@ const scrolly = new ScrollyTeller({
     transparentUntilActive: false
 });
 
+if(isMobile){
+
+	let dist = height + 30
+
+	d3.select('.scroll-text')
+	.style('top', dist + 'px')
+
+	document.querySelector(".scroll-wrapper").style.height = d3.select('.scroll-text').node().getBoundingClientRect().height + 'px'
+
+}
+
 const triggerPoints = data[0].data;
 const mapPoints = data[1].data;
 
@@ -160,6 +169,11 @@ triggerPoints.forEach((d,i) => {
 		bubbles.selectAll('circle').remove()
 		labels.selectAll('*').remove()
 		overlays.selectAll('path').remove()
+
+		overlays
+	    .interrupt()
+	    .transition();
+
 
 		let points = mapPoints.filter(f => f['scrolly-stage'] === String(i+1));
 		let caption = points.find(f => f['caption-on-viz'] === 'Y');
@@ -330,6 +344,8 @@ scrolly.watchScroll();
 window.onscroll = (e) => {
 
 	tooltip.classed('over', false)
+
+	//stop all transitions
 	
 }
 
