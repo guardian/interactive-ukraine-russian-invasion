@@ -178,12 +178,21 @@ triggerPoints.forEach((d,i) => {
 		labels.selectAll('*').remove()
 		overlays.selectAll('path').remove()
 
+		console.log(i, isMobile && i > 2)
+
+
+		let areasMob = isMobile && i > 2 ?
+									[{name:'Crimea', coordinates:[34.4975073,45.345141], type:'area', offset:[0,0], align:'middle'}]
+								: 
+									[{name:'Crimea', coordinates:[34.4975073,45.345141], type:'area', offset:[0,0], align:'middle'},
+									{name:'Separatist- controlled area', coordinates:[38.9081713,48.11942], type:'area', offset:[20,-25], align:'middle'}]
+
 		overlays
 	    .interrupt()
 	    .transition();
 
 
-		let points = mapPoints.filter(f => f['scrolly-stage'] === String(i+1));
+		let points = isMobile ? mapPoints.filter(f => f['scrolly-stage'] === String(i+1) && f['mobile-view'] === 'Y') : mapPoints.filter(f => f['scrolly-stage'] === String(i+1));
 		let caption = points.find(f => f['caption-on-viz'] === 'Y');
 
 		if(d.scope === 'wider-Ukraine'){
@@ -272,7 +281,7 @@ triggerPoints.forEach((d,i) => {
 				backgrounds.select('.kiev-bg').attr('display','none')
 
 				southUkraine.makeLabels(labels, cities)
-				southUkraine.makeLabels(labels, areas)
+				southUkraine.makeLabels(labels, areasMob)
 
 				southUkraine.makePoints(dots, points, 5, [0,0], manageMove, manageOver, manageOut)
 
@@ -385,7 +394,10 @@ const manageOut = (event) => {
 	tooltip.classed('over', false)
 }
 
-const renderUkraine = (x,y,d,points) => {
+const renderUkraine = (x,y,d,points, areas) => {
+
+	console.log(areas)
+
 	ukraine.makeLabels(labels, cities, [x,y])
 	ukraine.makeLabels(labels, areas, [x,y])
 
