@@ -52,11 +52,6 @@ export async function render() {
 							<p>Ukrainian attack or movement </p>
 						</div>
 	            	</div>
-	            	<div class='annotation-wrapper'>
-	            		<div class='annotation'>
-							<svg></svg>
-						</div>
-					</div>
 					<div class="tooltip-wrapper">
 		            	<div class='tooltip-map-list'>
 		            		<time></time>

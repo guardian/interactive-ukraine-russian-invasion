@@ -80,7 +80,7 @@ let kievObj = isMobile ? geo.objects['kiev-v'] : geo.objects['kiev-h'];
 
 
 const tooltip = d3.select('.tooltip-map-list')
-const annotation = d3.select('.annotation')
+// const annotation = d3.select('.annotation')
 const colorKey = d3.select('.colour-key-wraper')
 .style('opacity', 0)
 
@@ -93,6 +93,7 @@ const overlays = svg.select('.overlays');
 const areasControl = overlays.append('g')
 const arrows = overlays.append('g')
 
+const annotations = overlays.append('g').attr('class', 'annotations-layer')
 const dots = overlays.append('g')
 const bubbles = overlays.append('g')
 const labels = overlays.append('g')
@@ -169,8 +170,9 @@ triggerPoints.forEach((d,i) => {
 
 		currentStepNumber = stepNumber
 
-		annotation.style('display', 'none')
-		annotation.select('svg').selectChildren().remove()
+		// annotation.style('display', 'none')
+		// annotation.select('svg').selectChildren().remove()
+		annotations.selectChildren().remove()
 		tooltip.classed('over', false)
 		arrows.selectAll('path').remove()
 		dots.selectAll('circle').remove()
@@ -441,14 +443,14 @@ function renderBubbleMap(x, y, d) {
 		.attr('cx', d => ukraine.getPoints([d.Longitude, d.Latitude])[0])
 		.attr('cy', d => ukraine.getPoints([d.Longitude, d.Latitude])[1])
 
-		
-	annotation.style('display', 'block')
-	ukraine.makeAnnotation(annotation, "Russian military deployment", [39.168586356, 51.51019768], [0, 0], 15, {width:100, align:'right'})
+
+	// annotation.style('display', 'block')
+	ukraine.makeAnnotation(annotations, "Russian military deployment", [39.168586356, 51.51019768], [0, 0], 15, {width:100, align:'right'})
 
 	let lineLength = isMobile ? 30 : 60;
-	ukraine.makeAnnotation(annotation, "Estimated 5,000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:75, align:'bottom'})
+	ukraine.makeAnnotation(annotations, "Estimated 5,000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:75, align:'bottom'})
 
 	lineLength = isMobile ? 20 : 40;
-	ukraine.makeAnnotation(annotation, "Estimated 1,200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:75, align:'left'})
+	ukraine.makeAnnotation(annotations, "Estimated 1,200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:75, align:'left'})
 
 }

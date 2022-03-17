@@ -210,13 +210,13 @@ export default class Map {
 		.on('mouseout', e => {if(out)out(e)})
 	}
 
-	makeAnnotation(annotation, text, position, translate = [0,0], lineLength = 15, wrapOptions = {width:150, align:'left'}){
+	makeAnnotation(parent, text, position, translate = [0,0], lineLength = 15, wrapOptions = {width:150, align:'left'}){
 
-		annotation
-		.style('left', translate[0] + 'px')
-		.style('top', translate[1] + 'px')
+		// annotation
+		// .style('left', translate[0] + 'px')
+		// .style('top', translate[1] + 'px')
 
-		let group = annotation.select("svg").append('g')
+		let group = parent.append('g')
 		group.attr('transform', `translate(${this.projection(position)[0]},${this.projection(position)[1]})`)
 
 		let textGroup = group.append('g')
