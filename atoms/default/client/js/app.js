@@ -30,7 +30,7 @@ const cities = [
 {name:'Kharkiv', coordinates:[36.25904386,49.99533397], type:'city', offset:[10,7], align:'end'},
 {name:'Lviv', coordinates:[24.0066233,49.836511], type:'city', offset:[5,3], align:'start'},
 {name:'Mariupol', coordinates:[37.549444,47.095833], type:'city', offset:[0,15], align:'start'},
-{name:'Kherson', coordinates:[32.5943554,46.6555112], type:'city', offset:[5,3], align:'end'}
+{name:'Kherson', coordinates:[32.5943554,46.6555112], type:'city', offset:[-5,15], align:'end'}
 ]
 
 const locations = [

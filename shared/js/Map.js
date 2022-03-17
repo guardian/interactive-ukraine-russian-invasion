@@ -166,7 +166,7 @@ export default class Map {
 			else if(o.type === 'city'){
 
 				node.append('circle')
-				.attr('r', '3px')
+				.attr('r', '2px')
 				.attr('cx', posX + translate[0] + 'px')
 				.attr('cy', posY + translate[1] + 'px')
 				.attr('class', 'city-dot')
