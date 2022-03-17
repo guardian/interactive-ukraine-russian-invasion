@@ -217,11 +217,8 @@ triggerPoints.forEach((d,i) => {
 				ukraine.scaleImage(scale, 300, false, {x:x, y:y}, () => {
 
 					if (currentStepNumber !== stepNumber) {
-						console.log("not current step")
 						return;
 					}
-
-					console.log("current step", currentStepNumber)
 
 					backgrounds.select('.south-ukraine-bg').attr('display','none')
 
@@ -254,11 +251,8 @@ triggerPoints.forEach((d,i) => {
 
 			ukraine.zoomToLocation(scale, 600, true, southUkraineCenterCoordinates, () => {
 				if (currentStepNumber !== stepNumber) {
-					console.log("not current step")
 					return;
 				}
-
-				console.log("current step")
 
 				backgrounds.select('.ukraine-bg').attr('display','none')
 				backgrounds.select('.kiev-bg').attr('display','none')
@@ -301,11 +295,8 @@ triggerPoints.forEach((d,i) => {
 			ukraine.zoomToLocation(scale, 600, true, kyiv.coordinates, () => {
 
 				if (currentStepNumber !== stepNumber) {
-					console.log("not current step")
 					return;
 				}
-
-				console.log("current step")
 
 				backgrounds.select('.ukraine-bg').attr('display','none')
 
