@@ -137,46 +137,9 @@ svg.select('.south-ukraine-bg').attr('display', 'none')
 const ukraine = new Map(width, height, geo, ukraineObj, 1)
 const ukraineBg = ukraine.makeBackground(backgrounds, `<%= path %>/jpg/${ukraineBgImage}.jpg`, 'ukraine-bg', overlays)
 
-// dots.selectAll('circle')
-// 	.data(prewar)
-// 	.join('circle')
-// 	.attr('class', 'buildup')
-// 	.attr('r', 5)
-// 	.attr('cx', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
-// 	.attr('cy', d =>ukraine.getPoints([d.Longitude, d.Latitude])[1])
-
-// bubbles.selectAll('circle')
-// 	.data(troopNumbers)
-// 	.join('circle')
-// 	.attr('class', 'bubble')
-// 	.attr('r', d => {
-// 		let scaleFactor = isMobile ? 0.5 : 1;
-// 		return Math.sqrt(d.Value / Math.PI) * scaleFactor
-// 	})
-// 	.attr('cx', d => ukraine.getPoints([d.Longitude, d.Latitude])[0])
-// 	.attr('cy', d => ukraine.getPoints([d.Longitude, d.Latitude])[1])
-
-
-// annotation.style('display', 'block')
-// ukraine.makeAnnotation(annotation, "Russian military deployment", [39.168586356, 51.51019768], [0, 0], 15, {width:100, align:'right'})
-
-// let lineLength = isMobile ? 30 : 60;
-// ukraine.makeAnnotation(annotation, "Estimated 5,000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:75, align:'bottom'})
-
-// lineLength = isMobile ? 20 : 40;
-// ukraine.makeAnnotation(annotation, "Estimated 1,200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:75, align:'left'})
-
-// let x= 0, y = 0
-
-// ukraine.makeLabels(labels, countries, [x,y])
-// ukraine.makeLabels(labels, cities.filter(f => f.type === 'capital'), [x,y])
-// ukraine.makeLabels(labels, areasWideOverview, [x,y])
-
 const triggerPoints = data[0].data;
 
-// let imageOverlayName = triggerPoints[0]['image-overlay']
-// ukraine.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === imageOverlayName)), [x,y])
-
+renderBubbleMap(0,0, triggerPoints[0])
 
 const scrolly = new ScrollyTeller({
 	parent: document.querySelector("#scrolly-1"),
@@ -189,6 +152,7 @@ const mapPoints = data[1].data;
 
 let currentScale = 1;
 let currentStepNumber = 0
+let currentScope = 'wider-Ukraine'
 
 triggerPoints.forEach((d,i) => {
 	let stepNumber = i + 1
@@ -216,48 +180,18 @@ triggerPoints.forEach((d,i) => {
 
 			colorKey.style('opacity', 0)
 
+			if (d.scope !== currentScope) {
 			ukraine.scaleImage(scale, 300,  false,{x:x, y:y}, () => {
 
 				if (currentStepNumber !== stepNumber) {
 					return;
 				}
 
-				ukraine.makeLabels(labels, countries, [x,y])
-				ukraine.makeLabels(labels, cities.filter(f => f.type === 'capital'), [x,y])
-				ukraine.makeLabels(labels, areasWideOverview, [x,y])
-
-				ukraine.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
-
-				dots.selectAll('circle')
-					.data(prewar)
-					.join('circle')
-					.attr('class', 'buildup')
-					.attr('r', 5)
-					.attr('cx', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
-					.attr('cy', d =>ukraine.getPoints([d.Longitude, d.Latitude])[1])
-
-				bubbles.selectAll('circle')
-					.data(troopNumbers)
-					.join('circle')
-					.attr('class', 'bubble')
-					.attr('r', d => {
-						let scaleFactor = isMobile ? 0.5 : 1;
-						return Math.sqrt(d.Value / Math.PI) * scaleFactor
-					})
-					.attr('cx', d => ukraine.getPoints([d.Longitude, d.Latitude])[0])
-					.attr('cy', d => ukraine.getPoints([d.Longitude, d.Latitude])[1])
-
-					
-				annotation.style('display', 'block')
-				ukraine.makeAnnotation(annotation, "Russian military deployment", [39.168586356, 51.51019768], [0, 0], 15, {width:100, align:'right'})
-
-				let lineLength = isMobile ? 30 : 60;
-				ukraine.makeAnnotation(annotation, "Estimated 5,000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:75, align:'bottom'})
-
-				lineLength = isMobile ? 20 : 40;
-				ukraine.makeAnnotation(annotation, "Estimated 1,200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:75, align:'left'})
-
+				renderBubbleMap(x, y, d)
 			})
+			} else {
+				renderBubbleMap(x, y, d)
+			}
 
 			currentScale = scale
 		}
@@ -393,6 +327,8 @@ triggerPoints.forEach((d,i) => {
 
 			currentScale = scale
 		}
+
+		currentScope = d.scope
 	}})
 
 })
@@ -458,3 +394,40 @@ const renderUkraine = (x,y,d,points) => {
 	}	
 }
 
+function renderBubbleMap(x, y, d) {
+	ukraine.makeLabels(labels, countries, [x,y])
+	ukraine.makeLabels(labels, cities.filter(f => f.type === 'capital'), [x,y])
+	ukraine.makeLabels(labels, areasWideOverview, [x,y])
+
+	ukraine.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
+
+	dots.selectAll('circle')
+		.data(prewar)
+		.join('circle')
+		.attr('class', 'buildup')
+		.attr('r', 5)
+		.attr('cx', d =>ukraine.getPoints([d.Longitude, d.Latitude])[0])
+		.attr('cy', d =>ukraine.getPoints([d.Longitude, d.Latitude])[1])
+
+	bubbles.selectAll('circle')
+		.data(troopNumbers)
+		.join('circle')
+		.attr('class', 'bubble')
+		.attr('r', d => {
+			let scaleFactor = isMobile ? 0.5 : 1;
+			return Math.sqrt(d.Value / Math.PI) * scaleFactor
+		})
+		.attr('cx', d => ukraine.getPoints([d.Longitude, d.Latitude])[0])
+		.attr('cy', d => ukraine.getPoints([d.Longitude, d.Latitude])[1])
+
+		
+	annotation.style('display', 'block')
+	ukraine.makeAnnotation(annotation, "Russian military deployment", [39.168586356, 51.51019768], [0, 0], 15, {width:100, align:'right'})
+
+	let lineLength = isMobile ? 30 : 60;
+	ukraine.makeAnnotation(annotation, "Estimated 5,000 troops", [44.5, 48.738889], [0, 0], lineLength, {width:75, align:'bottom'})
+
+	lineLength = isMobile ? 20 : 40;
+	ukraine.makeAnnotation(annotation, "Estimated 1,200 troops", [29.608333, 46.844444], [0, 0], lineLength, {width:75, align:'left'})
+
+}
