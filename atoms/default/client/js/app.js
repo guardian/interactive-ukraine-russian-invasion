@@ -227,7 +227,7 @@ triggerPoints.forEach((d,i) => {
 			backgrounds.select('.kiev-bg').attr('display','none')
 
 			let scale = isMobile ? 1.5 : 1.3;
-			let x = isMobile ? 75 : 180;
+			let x = isMobile ? 80 : 180;
 			let y = isMobile ? -100 : -120;
 
 			backgrounds.select('.south-ukraine-bg')
