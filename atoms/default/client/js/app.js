@@ -9,6 +9,7 @@ import overlaysGeo from 'assets/json/areas.json'
 import ScrollyTeller from "shared/js/scrollyteller"
 import data from "assets/json/data.json"
 
+const isMobile = window.matchMedia('(max-width: 800px)').matches;
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
@@ -38,9 +39,14 @@ const locations = [
 {name:'Boryspil International airport', coordinates:[30.8806328,50.3426539], type:'location', offset:[15,4], align:'end'}
 ]
 
+const areasWideOverview = [
+{name:'Crimea', coordinates:[34.4975073,45.345141], type:(isMobile ? 'location': 'area'), offset:[0,(isMobile ? 50 : 0)], align:'middle'},
+{name:'Separatist- controlled area', coordinates:[38.9081713,48.11942], type:'area', offset:[(isMobile ? 20 : 10),(isMobile ? -10 : 0)], align:'middle'}
+]
+
 const areas = [
 {name:'Crimea', coordinates:[34.4975073,45.345141], type:'area', offset:[0,0], align:'middle'},
-{name:'Separatist- controlled area', coordinates:[38.9081713,48.11942], type:'area', offset:[20,-25], align:'middle'}
+{name:'Separatist- controlled area', coordinates:[38.9081713,48.11942], type:'area', offset:[20,(isMobile ? -5 : -25)], align:'middle'}
 ]
 
 const countries = [
@@ -52,8 +58,6 @@ const countries = [
 const geographies = [
 {name: 'Dnieper river', coordinates:[32.8743653,49.249875], type:'text-water'}
 ]
-
-const isMobile = window.matchMedia('(max-width: 800px)').matches;
 
 const atomEl = d3.select('#scrolly-1').node();
 
@@ -107,9 +111,6 @@ svg.select('.south-ukraine-bg').attr('display', 'none')
 const ukraine = new Map(width, height, geo, ukraineObj, 1)
 const ukraineBg = ukraine.makeBackground(backgrounds, `<%= path %>/jpg/${ukraineBgImage}.jpg`, 'ukraine-bg', overlays)
 
-ukraine.makeLabels(labels, cities)
-ukraine.makeLabels(labels, areas)
-
 dots.selectAll('circle')
 	.data(prewar)
 	.join('circle')
@@ -143,7 +144,7 @@ let x= 0, y = 0
 
 ukraine.makeLabels(labels, countries, [x,y])
 ukraine.makeLabels(labels, cities.filter(f => f.type === 'capital'), [x,y])
-ukraine.makeLabels(labels, areas, [x,y])
+ukraine.makeLabels(labels, areasWideOverview, [x,y])
 
 const triggerPoints = data[0].data;
 
@@ -194,7 +195,7 @@ triggerPoints.forEach((d,i) => {
 				if (!firstTrigger) {
 					ukraine.makeLabels(labels, countries, [x,y])
 					ukraine.makeLabels(labels, cities.filter(f => f.type === 'capital'), [x,y])
-					ukraine.makeLabels(labels, areas, [x,y])
+					ukraine.makeLabels(labels, areasWideOverview, [x,y])
 	
 					ukraine.makeArea(areasControl, topojson.merge(overlaysGeo, overlaysGeo.objects.areas.geometries.filter(f => f.properties.layer === d['image-overlay'])), [x,y])
 	
