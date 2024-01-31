@@ -22,6 +22,16 @@ class ScrollyTeller {
         if(this.transparentUntilActive) {
             config.parent.classList.add("transparent-until-active");
         }
+
+
+        window.addEventListener('message', (message) => {
+          if(typeof message !== "object" || typeof message == null) return;
+          if(!("kind" in message || !("height" in message)) return;
+          if(message.kind !== "interactive:scroll") return;
+          if(typeof message.height !== "number") return;
+
+          wrapper.scrollTo(0, message.data);
+        });
     }
 
     gradual( f ) {

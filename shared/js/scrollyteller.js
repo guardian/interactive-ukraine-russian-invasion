@@ -13,15 +13,13 @@ class ScrollyTeller {
         this.textBoxes = [].slice.apply(this.scrollText.querySelectorAll(".scroll-text__inner"));
         this.transparentUntilActive = config.transparentUntilActive;
 
-        this.scrollWrapper.style.height = this.textBoxes.length * 100 + "vh";
-
         if(this.transparentUntilActive) {
             config.parent.classList.add("transparent-until-active");
         }
     }
 
     checkScroll() {
-        if(this.lastScroll !== window.pageYOffset) {
+        if(this.lastScroll !== this.scrollWrapper.scrollTop) {
             const bbox = this.scrollText.getBoundingClientRect();
     
             if(!supportsSticky) {
@@ -59,7 +57,7 @@ class ScrollyTeller {
                 }
             }
     
-            this.lastScroll = window.pageYOffset;
+            this.lastScroll = this.scrollWrapper.scrollTop;
         }
     
         window.requestAnimationFrame(this.checkScroll.bind(this));
